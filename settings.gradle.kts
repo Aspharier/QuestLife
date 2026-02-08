@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "QuestLife"
-include(":app", ":core", ":domain", ":data", ":presentation")
+include(":app")
