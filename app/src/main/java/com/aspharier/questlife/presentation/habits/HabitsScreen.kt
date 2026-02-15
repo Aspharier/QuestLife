@@ -9,10 +9,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -21,12 +27,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aspharier.questlife.domain.model.Habit
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitsScreen(
     viewModel: HabitsViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showSheet by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -51,6 +59,30 @@ fun HabitsScreen(
                             HabitsEvent.DeactivateHabit(habitId)
                         )
                     }
+                )
+            }
+        }
+
+        FloatingActionButton(
+            onClick = { showSheet = true },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp)
+        ) {
+            Text("+")
+        }
+
+        if (showSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showSheet = false }
+            ) {
+                CreateHabitSheet(
+                    onCreate = { name, difficulty ->
+                        viewModel.onEvent(
+                            HabitsEvent.CreateHabit(name, difficulty)
+                        )
+                    },
+                    onDismiss = { showSheet = false }
                 )
             }
         }

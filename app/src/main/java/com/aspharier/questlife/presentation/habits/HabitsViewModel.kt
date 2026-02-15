@@ -2,6 +2,9 @@ package com.aspharier.questlife.presentation.habits
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aspharier.questlife.domain.model.Habit
+import com.aspharier.questlife.domain.model.HabitCategory
+import com.aspharier.questlife.domain.model.HabitFrequency
 import com.aspharier.questlife.domain.repository.HabitRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +14,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +57,26 @@ class HabitsViewModel @Inject constructor(
         when (event) {
             is HabitsEvent.CreateHabit -> {
                 viewModelScope.launch {
-                    repository.saveHabit(event.habit)
+                    val newHabit = Habit(
+                        id = UUID.randomUUID().toString(),
+                        name = event.name,
+                        iconId = "default",
+                        colorHex = "#6366F1",
+
+                        frequency = HabitFrequency.DAILY,
+                        frequencyDays = emptyList(),
+                        difficulty = event.difficulty,
+                        category = HabitCategory.PRODUCTIVITY,
+
+                        reminderTimes = emptyList(),
+                        description = null,
+
+                        createdAt = System.currentTimeMillis(),
+                        isActive = true,
+                        sortOrder = 0
+                    )
+
+                    repository.saveHabit(newHabit)
                 }
             }
             is HabitsEvent.DeactivateHabit -> {
