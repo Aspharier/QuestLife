@@ -2,7 +2,6 @@ package com.aspharier.questlife.presentation.habits
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -54,6 +53,9 @@ fun HabitsScreen(
             else -> {
                 HabitList(
                     habits = uiState.habits,
+                    onComplete = { habit ->
+                        viewModel.onEvent(HabitsEvent.CompleteHabit(habit))
+                    },
                     onDeactivate = { habitId ->
                         viewModel.onEvent(
                             HabitsEvent.DeactivateHabit(habitId)
@@ -92,6 +94,7 @@ fun HabitsScreen(
 @Composable
 private fun HabitList(
     habits: List<Habit>,
+    onComplete: (Habit) -> Unit,
     onDeactivate: (String) -> Unit
 ) {
     LazyColumn(
@@ -113,8 +116,10 @@ private fun HabitList(
             key = { it.id }
         ) { habit ->
             HabitListItem(
-                title = habit.name,
-                meta = "${habit.difficulty.name} · ${habit.category.name}",
+                habit = habit,
+                onClick = {
+                    onComplete(habit)
+                },
                 onLongPress = {
                     onDeactivate(habit.id)
                 }

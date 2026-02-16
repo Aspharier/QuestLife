@@ -14,11 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.aspharier.questlife.core.ui.theme.QuestCard
+import com.aspharier.questlife.domain.model.Habit
 
 @Composable
 fun HabitListItem(
-    title: String,
-    meta: String,
+    habit: Habit,
+    onClick: () -> Unit,
     onLongPress: () -> Unit
 ) {
     QuestCard(
@@ -27,6 +28,7 @@ fun HabitListItem(
             .padding(horizontal = 16.dp)
             .pointerInput(Unit){
                 detectTapGestures(
+                    onTap = { onClick() },
                     onLongPress = { onLongPress() }
                 )
             }
@@ -36,17 +38,17 @@ fun HabitListItem(
                 .padding(16.dp)
         ) {
             Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge
+                text = "${habit.difficulty.name} · ${habit.category.name}",
+                style = MaterialTheme.typography.labelLarge
             )
 
-            Spacer(Modifier.height(4.dp))
-
-            Text(
-                text = meta,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+//            Spacer(Modifier.height(4.dp))
+//
+//            Text(
+//                text = meta,
+//                style = MaterialTheme.typography.labelLarge,
+//                color = MaterialTheme.colorScheme.onSurfaceVariant
+//            )
         }
     }
 }

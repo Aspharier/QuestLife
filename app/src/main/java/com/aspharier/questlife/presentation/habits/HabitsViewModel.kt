@@ -6,6 +6,7 @@ import com.aspharier.questlife.domain.model.Habit
 import com.aspharier.questlife.domain.model.HabitCategory
 import com.aspharier.questlife.domain.model.HabitFrequency
 import com.aspharier.questlife.domain.repository.HabitRepository
+import com.aspharier.questlife.domain.usecase.CompleteHabitUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,11 +22,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HabitsViewModel @Inject constructor(
-    private val repository: HabitRepository
+    private val repository: HabitRepository,
+    private val completeHabitUseCase: CompleteHabitUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HabitsUiState())
     val uiState: StateFlow<HabitsUiState> = _uiState.asStateFlow()
+    private val _completionState = MutableStateFlow(HabitCompletionState())
+    val completionState: StateFlow<HabitCompletionState> =
+        _completionState.asStateFlow()
 
     init {
         observeHabits()
@@ -82,6 +87,19 @@ class HabitsViewModel @Inject constructor(
             is HabitsEvent.DeactivateHabit -> {
                 viewModelScope.launch {
                     repository.deactivateHabit(event.habitId)
+                }
+            }
+            is HabitsEvent.CompleteHabit -> {
+                viewModelScope.launch {
+                    val completion = completeHabitUseCase(event.habit)
+
+                    completion?.let {
+                        _completionState.value =
+                            HabitCompletionState(
+                                completedHabitId = event.habit.id,
+                                xpGained = it.xpAwarded
+                            )
+                    }
                 }
             }
         }

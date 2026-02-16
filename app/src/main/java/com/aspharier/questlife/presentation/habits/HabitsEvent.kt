@@ -13,4 +13,8 @@ sealed interface HabitsEvent {
     data class DeactivateHabit(
         val habitId: String
     ) : HabitsEvent
+
+    data class CompleteHabit(
+        val habit: Habit
+    ) : HabitsEvent
 }
