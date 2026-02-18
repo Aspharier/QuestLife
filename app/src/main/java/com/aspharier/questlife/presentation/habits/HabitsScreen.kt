@@ -33,6 +33,7 @@ fun HabitsScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val completionState by viewModel.completionState.collectAsStateWithLifecycle()
     var showSheet by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -53,6 +54,7 @@ fun HabitsScreen(
             else -> {
                 HabitList(
                     habits = uiState.habits,
+                    completionState = completionState,
                     onComplete = { habit ->
                         viewModel.onEvent(HabitsEvent.CompleteHabit(habit))
                     },
@@ -60,6 +62,9 @@ fun HabitsScreen(
                         viewModel.onEvent(
                             HabitsEvent.DeactivateHabit(habitId)
                         )
+                    },
+                    onClearCompletion = {
+                        viewModel.clearCompletionState()
                     }
                 )
             }
@@ -94,8 +99,10 @@ fun HabitsScreen(
 @Composable
 private fun HabitList(
     habits: List<Habit>,
+    completionState: HabitCompletionState,
     onComplete: (Habit) -> Unit,
-    onDeactivate: (String) -> Unit
+    onDeactivate: (String) -> Unit,
+    onClearCompletion: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -115,8 +122,15 @@ private fun HabitList(
             items = habits,
             key = { it.id }
         ) { habit ->
-            HabitListItem(
-                habit = habit,
+            AnimatedHabitCard(
+                habitName = habit.name,
+                meta = "${habit.difficulty.name} · ${habit.category.name}",
+                isCompleted = completionState.completedHabitId == habit.id,
+                xpGained = if (completionState.completedHabitId == habit.id)
+                    completionState.xpGained else null,
+                onAnimationEnd = {
+                    onClearCompletion()
+                },
                 onClick = {
                     onComplete(habit)
                 },

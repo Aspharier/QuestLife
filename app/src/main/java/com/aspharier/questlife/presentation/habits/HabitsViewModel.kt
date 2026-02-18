@@ -104,4 +104,8 @@ class HabitsViewModel @Inject constructor(
             }
         }
     }
+
+    fun clearCompletionState() {
+        _completionState.value = HabitCompletionState()
+    }
 }
