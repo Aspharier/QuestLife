@@ -17,6 +17,9 @@ interface CompletionDao {
     """)
     fun observeCompletionsFroHabit(habitId: String): Flow<List<CompletionEntity>>
 
+    @Query("SELECT * FROM completions")
+    fun observeAllCompletions(): Flow<List<CompletionEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCompletion(completion: CompletionEntity)
 
