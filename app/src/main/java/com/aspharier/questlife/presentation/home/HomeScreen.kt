@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aspharier.questlife.presentation.profile.AvatarStatsCard
 import com.aspharier.questlife.presentation.profile.LevelUpAnimation
 import com.aspharier.questlife.presentation.profile.ProfileViewModel
 
@@ -90,6 +91,10 @@ fun HomeScreen() {
                 style = MaterialTheme.typography.labelLarge
             )
         }
+
+        AvatarStatsCard(
+            stats = profileState.stats
+        )
 
 
         // FAB
