@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aspharier.questlife.presentation.avatar.AvatarClass
+import com.aspharier.questlife.presentation.avatar.AvatarRenderer
+import com.aspharier.questlife.presentation.avatar.AvatarState
 import com.aspharier.questlife.presentation.profile.AvatarStatsCard
 import com.aspharier.questlife.presentation.profile.LevelUpAnimation
 import com.aspharier.questlife.presentation.profile.ProfileViewModel
@@ -30,6 +33,10 @@ fun HomeScreen() {
 
     val profileViewModel: ProfileViewModel = hiltViewModel()
     val profileState by profileViewModel.uiState.collectAsStateWithLifecycle()
+    val avatarState = AvatarState(
+        avatarClass = AvatarClass.WARRIOR,
+        isLevelUp = profileState.levelUp
+    )
 
     if (profileState.levelUp) {
         LevelUpAnimation(level = profileState.level)
@@ -96,6 +103,10 @@ fun HomeScreen() {
             stats = profileState.stats
         )
 
+        AvatarRenderer(
+            state = avatarState,
+            modifier = Modifier.padding(top = 16.dp)
+        )
 
         // FAB
         FloatingActionButton(
