@@ -18,37 +18,37 @@ import com.aspharier.questlife.core.ui.theme.QuestCard
 
 @Composable
 fun StatsRow() {
-    QuestCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
+    QuestCard(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            StatItem("❤️", "340")
-            StatItem("⚔️", "45")
-            StatItem("🛡️", "38")
-            StatItem("✨", "52")
-            StatItem("🍀", "29")
+            StatItem("❤️", "HP", "340")
+            StatItem("⚔️", "ATK", "45")
+            StatItem("🛡️", "DEF", "38")
+            StatItem("✨", "MANA", "52")
+            StatItem("🍀", "LUCK", "29")
         }
     }
 }
 
 @Composable
-fun StatItem(
-    icon: String, value: String
-) {
+fun StatItem(icon: String, label: String, value: String) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
     ) {
-        Text(icon, fontSize = 20.sp)
+        Text(icon, fontSize = 22.sp)
         Spacer(Modifier.height(4.dp))
-
         Text(
-            text = value,
-            style = MaterialTheme.typography.labelLarge
+                text = value,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

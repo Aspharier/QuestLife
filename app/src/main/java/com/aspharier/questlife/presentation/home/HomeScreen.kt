@@ -1,16 +1,13 @@
 package com.aspharier.questlife.presentation.home
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,9 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aspharier.questlife.presentation.avatar.AvatarClass
-import com.aspharier.questlife.presentation.avatar.AvatarRenderer
 import com.aspharier.questlife.presentation.avatar.AvatarState
-import com.aspharier.questlife.presentation.profile.AvatarStatsCard
 import com.aspharier.questlife.presentation.profile.LevelUpAnimation
 import com.aspharier.questlife.presentation.profile.ProfileViewModel
 
@@ -33,23 +28,20 @@ fun HomeScreen() {
 
     val profileViewModel: ProfileViewModel = hiltViewModel()
     val profileState by profileViewModel.uiState.collectAsStateWithLifecycle()
-    val avatarState = AvatarState(
-        avatarClass = AvatarClass.WARRIOR,
-        isLevelUp = profileState.levelUp
-    )
+    val avatarState =
+            AvatarState(avatarClass = AvatarClass.WARRIOR, isLevelUp = profileState.levelUp)
 
-    if (profileState.levelUp) {
-        LevelUpAnimation(level = profileState.level)
-    }
-
-    Box {
+    Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 96.dp)
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 96.dp)
         ) {
             item {
-                AvatarHeroSection()
+                AvatarHeroSection(
+                        level = profileState.level,
+                        totalXp = profileState.totalXp,
+                        progress = profileState.progressToNextLevel
+                )
             }
 
             item {
@@ -60,63 +52,30 @@ fun HomeScreen() {
             item {
                 Spacer(Modifier.height(24.dp))
                 Text(
-                    text = "Today's Habits",
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                        text = "Today's Habits",
+                        style = MaterialTheme.typography.headlineLarge,
+                        modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
 
             items(3) {
                 Spacer(Modifier.height(12.dp))
-                HabitPreviewCard(
-                    title = "Drink Water",
-                    meta = "Medium · Health · 🔥 12 days"
-                )
+                HabitPreviewCard(title = "Drink Water", meta = "Medium · Health · 🔥 12 days")
             }
         }
 
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-
-            Text(
-                text = "Level ${profileState.level}",
-                style = MaterialTheme.typography.headlineLarge
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            LinearProgressIndicator(
-                progress = profileState.progressToNextLevel,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            Text(
-                text = "${profileState.totalXp} XP",
-                style = MaterialTheme.typography.labelLarge
+        // Level-up overlay — covers whole screen on top
+        if (profileState.levelUp) {
+            LevelUpAnimation(
+                    level = profileState.level,
             )
         }
-
-        AvatarStatsCard(
-            stats = profileState.stats
-        )
-
-        AvatarRenderer(
-            state = avatarState,
-            modifier = Modifier.padding(top = 16.dp)
-        )
 
         // FAB
         FloatingActionButton(
-            onClick = {},
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp),
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Text("+", fontSize = 24.sp)
-        }
+                onClick = {},
+                modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp),
+                containerColor = MaterialTheme.colorScheme.primary
+        ) { Text("+", fontSize = 24.sp) }
     }
 }
