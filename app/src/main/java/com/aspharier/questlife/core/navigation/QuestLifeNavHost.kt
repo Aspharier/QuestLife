@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.aspharier.questlife.navigation.NavRoute
+import com.aspharier.questlife.presentation.equipment.EquipmentScreen
 import com.aspharier.questlife.presentation.habits.HabitsScreen
 import com.aspharier.questlife.presentation.home.HomeScreen
 import com.aspharier.questlife.presentation.quests.QuestsScreen
@@ -19,38 +20,23 @@ import com.aspharier.questlife.presentation.world.WorldScreen
 @Composable
 fun QuestLifeNavHost() {
     val navController = rememberNavController()
-    val currentRoute = navController
-        .currentBackStackEntryAsState().value?.destination?.route
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     Scaffold(
-        bottomBar = {
-            BottomNavBar(
-                navController = navController,
-                currentRoute = currentRoute
-            )
-        }
+            bottomBar = { BottomNavBar(navController = navController, currentRoute = currentRoute) }
     ) { paddingValues ->
         NavHost(
-            navController = navController,
-            startDestination = NavRoute.Home.route,
-            modifier = Modifier.padding(paddingValues)
+                navController = navController,
+                startDestination = NavRoute.Home.route,
+                modifier = Modifier.padding(paddingValues)
         ) {
             // routes....
-            composable(NavRoute.Home.route) {
-                HomeScreen()
-            }
-            composable(NavRoute.Habits.route) {
-                HabitsScreen()
-            }
-            composable(NavRoute.Quests.route) {
-                QuestsScreen()
-            }
-            composable(NavRoute.World.route) {
-                WorldScreen()
-            }
-            composable(NavRoute.Settings.route) {
-                SettingsScreen()
-            }
+            composable(NavRoute.Home.route) { HomeScreen() }
+            composable(NavRoute.Habits.route) { HabitsScreen() }
+            composable(NavRoute.Quests.route) { QuestsScreen() }
+            composable(NavRoute.World.route) { WorldScreen() }
+            composable(NavRoute.Settings.route) { SettingsScreen() }
+            composable(NavRoute.Equipment.route) { EquipmentScreen() }
         }
     }
 }

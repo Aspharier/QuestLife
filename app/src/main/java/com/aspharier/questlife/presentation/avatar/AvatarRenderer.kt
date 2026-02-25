@@ -9,62 +9,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.aspharier.questlife.domain.model.Equipment
 import com.questlife.app.R
-
 
 @Composable
 fun AvatarRenderer(
-    state: AvatarState,
-    modifier: Modifier = Modifier
+        state: AvatarState,
+        modifier: Modifier = Modifier,
+        equippedItems: List<Equipment> = emptyList()
 ) {
     val idleScale = rememberIdleAnimation()
     val victoryScale = rememberVictoryAnimation(state.isLevelUp)
 
     val finalScale = if (state.isLevelUp) victoryScale else idleScale
 
-    Box(
-        modifier = modifier
-            .size(140.dp)
-            .scale(finalScale)
-    ) {
+    Box(modifier = modifier.size(140.dp).scale(finalScale)) {
 
         // BASE LAYER
         Image(
-            painter = painterResource(
-                id = getBaseRes(state.avatarClass)
-            ),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+                painter = painterResource(id = getBaseRes(state.avatarClass)),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
         )
 
-        // ARMOR LAYER
-        state.armorRes?.let {
-            Image(
-                painter = painterResource(id = it),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-
-        // WEAPON LAYER
-        state.weaponRes?.let {
-            Image(
-                painter = painterResource(id = it),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-
-        // ACCESSORY LAYER
-        state.accessoryRes?.let {
-            Image(
-                painter = painterResource(id = it),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
+        // EQUIPMENT LAYERS — drawn in order (helmet → armor → weapon → accessory)
+        equippedItems.forEach { item ->
+            if (item.spriteRes != 0) {
+                Image(
+                        painter = painterResource(id = item.spriteRes),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }
+
 private fun getBaseRes(avatarClass: AvatarClass): Int {
     return when (avatarClass) {
         AvatarClass.WARRIOR -> R.drawable.avatar_warrior
