@@ -20,4 +20,13 @@ interface HabitRepository {
 
     /** Add a new completion entry */
     suspend fun addCompletion(completion: Completion)
+
+    /** Get the current streak for a habit (0 if never completed) */
+    suspend fun getStreakForHabit(habitId: String): Int
+
+    /** Returns true if the habit was already completed today */
+    suspend fun isCompletedToday(habitId: String): Boolean
+
+    /** Observe all completions (for quests / stats) */
+    fun observeAllCompletions(): Flow<List<Completion>>
 }

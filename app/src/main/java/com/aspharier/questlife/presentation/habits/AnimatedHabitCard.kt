@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,8 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aspharier.questlife.core.ui.theme.QuestCard
@@ -38,29 +42,31 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AnimatedHabitCard(
-    habitName: String,
-    meta: String,
-    isCompleted: Boolean,
-    xpGained: Int?,
-    onAnimationEnd: () -> Unit,
-    onClick: () -> Unit,
-    onLongPress: () -> Unit
+        habitName: String,
+        meta: String,
+        isCompleted: Boolean,
+        isCompletedToday: Boolean,
+        streak: Int,
+        xpGained: Int?,
+        onAnimationEnd: () -> Unit,
+        onClick: () -> Unit,
+        onLongPress: () -> Unit
 ) {
     var animate by remember { mutableStateOf(false) }
 
-    val scale by animateFloatAsState(
-        targetValue = if (animate) 1.05f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy
-        ),
-        label = "scale"
-    )
+    val scale by
+            animateFloatAsState(
+                    targetValue = if (animate) 1.05f else 1f,
+                    animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+                    label = "scale"
+            )
 
-    val glowAlpha by animateFloatAsState(
-        targetValue = if (animate) 0.3f else 0f,
-        animationSpec = tween(600),
-        label = "glow"
-    )
+    val glowAlpha by
+            animateFloatAsState(
+                    targetValue = if (animate) 0.35f else 0f,
+                    animationSpec = tween(600),
+                    label = "glow"
+            )
 
     LaunchedEffect(isCompleted) {
         if (isCompleted) {
@@ -72,92 +78,121 @@ fun AnimatedHabitCard(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .scale(scale)
-    ) {
-
+    Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).scale(scale)) {
         QuestCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .combinedClickable(
-                    onClick = onClick,
-                    onLongClick = onLongPress
-                )
+                modifier =
+                        Modifier.fillMaxWidth()
+                                .combinedClickable(onClick = onClick, onLongClick = onLongPress)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Completed-today checkmark badge
+                    if (isCompletedToday) {
+                        Box(
+                                modifier =
+                                        Modifier.clip(RoundedCornerShape(6.dp))
+                                                .background(Color(0xFF22C55E).copy(alpha = 0.15f))
+                                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                        ) {
+                            Text(
+                                    text = "✓ Done",
+                                    fontSize = 11.sp,
+                                    color = Color(0xFF22C55E),
+                                    fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(2.dp))
+
                 Text(
-                    text = habitName,
-                    style = MaterialTheme.typography.titleLarge
+                        text = habitName,
+                        style = MaterialTheme.typography.titleLarge,
+                        color =
+                                if (isCompletedToday)
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                else MaterialTheme.colorScheme.onSurface
                 )
 
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(6.dp))
 
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Text(
-                        text = meta,
-                        style = MaterialTheme.typography.labelLarge
+                            text = meta,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-
-                    StreakFlame(streak = 5) // Temporary fixed value
+                    // Real streak from DB
+                    if (streak > 0) {
+                        StreakFlame(streak = streak)
+                        Text(
+                                text = " $streak",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }
 
-        // Glow Overlay
+        // Glow Overlay on completion animation
         if (glowAlpha > 0f) {
             Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.primary.copy(alpha = glowAlpha),
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0f)
-                            )
-                        )
-                    )
+                    modifier =
+                            Modifier.matchParentSize()
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(
+                                            Brush.verticalGradient(
+                                                    colors =
+                                                            listOf(
+                                                                    MaterialTheme.colorScheme
+                                                                            .primary.copy(
+                                                                            alpha = glowAlpha
+                                                                    ),
+                                                                    MaterialTheme.colorScheme
+                                                                            .primary.copy(
+                                                                            alpha = 0f
+                                                                    )
+                                                            )
+                                            )
+                                    )
             )
         }
 
         // XP popup
-        xpGained?.let { xp ->
-            XPPopup(xp = xp)
-        }
+        xpGained?.let { xp -> XPPopup(xp = xp) }
 
         if (isCompleted) {
-            ConfettiSystem(
-                modifier = Modifier.fillMaxSize()
-            )
+            ConfettiSystem(modifier = Modifier.fillMaxSize())
         }
     }
 }
 
 @Composable
 fun XPPopup(xp: Int) {
-
     var isAnimating by remember { mutableStateOf(false) }
 
-    val offsetY by animateFloatAsState(
-        targetValue = if (isAnimating) -80f else 0f,
-        animationSpec = tween(800),
-        label = "xpOffset"
-    )
-
-    val alpha by animateFloatAsState(
-        targetValue = if (isAnimating) 0f else 1f,
-        animationSpec = tween(800),
-        label = "xpAlpha"
-    )
+    val offsetY by
+            animateFloatAsState(
+                    targetValue = if (isAnimating) -80f else 0f,
+                    animationSpec = tween(800),
+                    label = "xpOffset"
+            )
+    val alpha by
+            animateFloatAsState(
+                    targetValue = if (isAnimating) 0f else 1f,
+                    animationSpec = tween(800),
+                    label = "xpAlpha"
+            )
 
     LaunchedEffect(Unit) {
         isAnimating = true
@@ -166,16 +201,14 @@ fun XPPopup(xp: Int) {
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .offset(y = offsetY.dp)
-            .alpha(1f - alpha), // Reverse alpha for fade out
-        contentAlignment = Alignment.TopCenter
+            modifier = Modifier.fillMaxWidth().offset(y = offsetY.dp).alpha(1f - alpha),
+            contentAlignment = Alignment.TopCenter
     ) {
         Text(
-            text = "+$xp XP",
-            fontSize = 18.sp,
-            color = MaterialTheme.colorScheme.primary
+                text = "+$xp XP ⚡",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFFFD700)
         )
     }
 }

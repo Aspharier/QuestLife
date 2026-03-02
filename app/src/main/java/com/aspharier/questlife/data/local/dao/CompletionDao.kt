@@ -31,4 +31,18 @@ interface CompletionDao {
         start: Long,
         end: Long
     ): List<CompletionEntity>
+
+    @Query("""
+        SELECT currentStreak FROM completions
+        WHERE habitId = :habitId
+        ORDER BY completedAt DESC
+        LIMIT 1
+    """)
+    suspend fun getLatestStreakForHabit(habitId: String): Int?
+
+    @Query("""
+        SELECT COUNT(*) FROM completions
+        WHERE habitId = :habitId AND completedAt >= :todayStart
+    """)
+    suspend fun countCompletionsTodayForHabit(habitId: String, todayStart: Long): Int
 }

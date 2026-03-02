@@ -17,17 +17,17 @@ import androidx.compose.ui.unit.sp
 import com.aspharier.questlife.core.ui.theme.QuestCard
 
 @Composable
-fun StatsRow() {
+fun StatsRow(hp: Int, atk: Int, def: Int, mana: Int, luck: Int) {
     QuestCard(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Row(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 8.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            StatItem("❤️", "HP", "340")
-            StatItem("⚔️", "ATK", "45")
-            StatItem("🛡️", "DEF", "38")
-            StatItem("✨", "MANA", "52")
-            StatItem("🍀", "LUCK", "29")
+            StatItem("❤️", "HP", hp.toString())
+            StatItem("⚔️", "ATK", atk.toString())
+            StatItem("🛡️", "DEF", def.toString())
+            StatItem("✨", "MANA", mana.toString())
+            StatItem("🍀", "LUCK", luck.toString())
         }
     }
 }

@@ -4,4 +4,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     fun observeTotalXp(): Flow<Int>
+    suspend fun addXp(amount: Int)
 }
