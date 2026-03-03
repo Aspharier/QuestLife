@@ -1,11 +1,11 @@
 package com.aspharier.questlife.core.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -24,8 +24,8 @@ fun BottomNavBar(navController: NavController, currentRoute: String?) {
             listOf(
                     NavItem(NavRoute.Home, "Home", Icons.Filled.Home),
                     NavItem(NavRoute.Habits, "Habits", Icons.Filled.CheckCircle),
-                    NavItem(NavRoute.Quests, "Quests", Icons.Filled.Star),
-                    NavItem(NavRoute.World, "World", Icons.Filled.Public),
+                    NavItem(NavRoute.Quests, "Quests", Icons.Filled.AutoStories),
+                    NavItem(NavRoute.Equipment, "Equipment", Icons.Filled.Shield),
                     NavItem(NavRoute.Settings, "Settings", Icons.Filled.Settings),
             )
 

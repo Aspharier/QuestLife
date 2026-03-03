@@ -60,9 +60,13 @@ val onErrorDark = Color(0xFF450A0A)
 val errorContainerDark = Color(0xFF7F1D1D)
 val onErrorContainerDark = Color(0xFFFEE2E2)
 
-// Accent colors
+// Accent colors & Rarities
 val xpGold = Color(0xFFFFD700)
 val streakFlame = Color(0xFFFF6B35)
+
+val rareBlue = Color(0xFF3B82F6)
+val epicPurple = Color(0xFF8B5CF6)
+val legendaryOrange = Color(0xFFF97316)
 
 // Color schemes
 val LightColorScheme =

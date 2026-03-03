@@ -6,8 +6,10 @@ import com.aspharier.questlife.domain.model.Habit
 import com.aspharier.questlife.domain.model.HabitCategory
 import com.aspharier.questlife.domain.model.HabitFrequency
 import com.aspharier.questlife.domain.model.HabitWithStreak
+import com.aspharier.questlife.domain.model.Quest
 import com.aspharier.questlife.domain.repository.HabitRepository
 import com.aspharier.questlife.domain.usecase.CompleteHabitUseCase
+import com.aspharier.questlife.domain.usecase.QuestProgressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.util.UUID
@@ -26,7 +28,8 @@ class HabitsViewModel
 @Inject
 constructor(
         private val repository: HabitRepository,
-        private val completeHabitUseCase: CompleteHabitUseCase
+        private val completeHabitUseCase: CompleteHabitUseCase,
+        private val questProgressUseCase: QuestProgressUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HabitsUiState())
@@ -34,6 +37,9 @@ constructor(
 
     private val _completionState = MutableStateFlow(HabitCompletionState())
     val completionState: StateFlow<HabitCompletionState> = _completionState.asStateFlow()
+
+    private val _newlyCompletedQuests = MutableStateFlow<List<Quest>>(emptyList())
+    val newlyCompletedQuests: StateFlow<List<Quest>> = _newlyCompletedQuests.asStateFlow()
 
     init {
         observeHabits()
@@ -108,6 +114,13 @@ constructor(
                 viewModelScope.launch {
                     val completion = completeHabitUseCase(event.habit)
                     completion?.let {
+                        // After completing a habit, evaluate quest progress!
+                        val questsJustCompleted = questProgressUseCase()
+                        if (questsJustCompleted.isNotEmpty()) {
+                            _newlyCompletedQuests.value =
+                                    _newlyCompletedQuests.value + questsJustCompleted
+                        }
+
                         _completionState.value =
                                 HabitCompletionState(
                                         completedHabitId = event.habit.id,
@@ -121,6 +134,10 @@ constructor(
 
     fun clearCompletionState() {
         _completionState.value = HabitCompletionState()
+    }
+
+    fun removeCompletedQuest(questId: String) {
+        _newlyCompletedQuests.update { quests -> quests.filterNot { it.id == questId } }
     }
 
     private fun categoryColor(category: HabitCategory): String =

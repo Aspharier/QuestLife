@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import com.aspharier.questlife.presentation.habits.ConfettiSystem
 import kotlinx.coroutines.delay
 
 @Composable
@@ -22,25 +23,22 @@ fun LevelUpAnimation(level: Int) {
 
     var visible by remember { mutableStateOf(true) }
 
-    val scale by animateFloatAsState(
-        targetValue = if (visible) 1.3f else 1f,
-        animationSpec = tween(600)
-    )
+    val scale by
+            animateFloatAsState(targetValue = if (visible) 1.3f else 1f, animationSpec = tween(600))
 
     LaunchedEffect(Unit) {
         delay(1500)
         visible = false
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = "LEVEL UP! $level",
-            style = MaterialTheme.typography.displayLarge,
-            modifier = Modifier.scale(scale),
-            color = MaterialTheme.colorScheme.primary
+                text = "LEVEL UP! $level",
+                style = MaterialTheme.typography.displayLarge,
+                modifier = Modifier.scale(scale),
+                color = MaterialTheme.colorScheme.primary
         )
+
+        ConfettiSystem(particleCount = 50, modifier = Modifier.fillMaxSize())
     }
 }
