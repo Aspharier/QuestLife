@@ -19,20 +19,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.foundation.clickable
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    viewModel: SettingsViewModel = hiltViewModel()
+) {
 
-    var darkModeEnabled by remember { mutableStateOf(false) }
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    val darkModeEnabled by viewModel.darkModeEnabled.collectAsState()
+    val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
+    val context = LocalContext.current
 
     LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 96.dp)) {
         item {
@@ -49,7 +54,8 @@ fun SettingsScreen() {
             SettingsItem(
                     icon = Icons.Filled.Person,
                     title = "Profile",
-                    subtitle = "Edit your hero profile"
+                    subtitle = "Edit your hero profile",
+                    onClick = { Toast.makeText(context, "Opening Profile...", Toast.LENGTH_SHORT).show() }
             )
             HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
         }
@@ -70,7 +76,7 @@ fun SettingsScreen() {
                     trailingContent = {
                         Switch(
                                 checked = darkModeEnabled,
-                                onCheckedChange = { darkModeEnabled = it }
+                                onCheckedChange = { viewModel.setDarkModeEnabled(it) }
                         )
                     }
             )
@@ -93,7 +99,7 @@ fun SettingsScreen() {
                     trailingContent = {
                         Switch(
                                 checked = notificationsEnabled,
-                                onCheckedChange = { notificationsEnabled = it }
+                                onCheckedChange = { viewModel.setNotificationsEnabled(it) }
                         )
                     }
             )
@@ -106,7 +112,8 @@ fun SettingsScreen() {
             SettingsItem(
                     icon = Icons.Filled.Star,
                     title = "Rate QuestLife",
-                    subtitle = "Leave a review on the Play Store"
+                    subtitle = "Leave a review on the Play Store",
+                    onClick = { Toast.makeText(context, "Opening Play Store...", Toast.LENGTH_SHORT).show() }
             )
             HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
         }
@@ -115,13 +122,19 @@ fun SettingsScreen() {
             SettingsItem(
                     icon = Icons.Filled.Security,
                     title = "Privacy Policy",
-                    subtitle = "View our privacy policy"
+                    subtitle = "View our privacy policy",
+                    onClick = { Toast.makeText(context, "Opening Privacy Policy...", Toast.LENGTH_SHORT).show() }
             )
             HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
         }
 
         item {
-            SettingsItem(icon = Icons.Filled.Info, title = "About", subtitle = "QuestLife v1.0")
+            SettingsItem(
+                icon = Icons.Filled.Info, 
+                title = "About", 
+                subtitle = "QuestLife v1.0",
+                onClick = { Toast.makeText(context, "QuestLife version 1.0", Toast.LENGTH_SHORT).show() }
+            )
         }
     }
 }
@@ -138,8 +151,9 @@ private fun SettingsSectionLabel(label: String) {
 }
 
 @Composable
-private fun SettingsItem(icon: ImageVector, title: String, subtitle: String) {
+private fun SettingsItem(icon: ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
     ListItem(
+            modifier = Modifier.clickable { onClick() },
             headlineContent = { Text(title) },
             supportingContent = { Text(subtitle) },
             leadingContent = {
