@@ -1,5 +1,8 @@
 package com.aspharier.questlife.core.navigation
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.EaseInOutQuart
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -28,7 +31,35 @@ fun QuestLifeNavHost() {
         NavHost(
                 navController = navController,
                 startDestination = NavRoute.Home.route,
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
+                enterTransition = {
+                    fadeIn(animationSpec = tween(400)) +
+                            slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                                    animationSpec = tween(400, easing = EaseInOutQuart)
+                            )
+                },
+                exitTransition = {
+                    fadeOut(animationSpec = tween(400)) +
+                            slideOutOfContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                                    animationSpec = tween(400, easing = EaseInOutQuart)
+                            )
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(400)) +
+                            slideIntoContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                                    animationSpec = tween(400, easing = EaseInOutQuart)
+                            )
+                },
+                popExitTransition = {
+                    fadeOut(animationSpec = tween(400)) +
+                            slideOutOfContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                                    animationSpec = tween(400, easing = EaseInOutQuart)
+                            )
+                }
         ) {
             // routes....
             composable(NavRoute.Home.route) { HomeScreen() }

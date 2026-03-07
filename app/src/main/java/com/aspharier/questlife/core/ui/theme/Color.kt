@@ -32,6 +32,16 @@ val onErrorLight = Color(0xFFFFFFFF)
 val errorContainerLight = Color(0xFFFEE2E2)
 val onErrorContainerLight = Color(0xFF7F1D1D)
 
+// Glass variants Light
+val glassWhite = Color(0xB3FFFFFF)
+val glassIndigo = Color(0x1A6366F1)
+val glassSurface = Color(0xBFF8FAFC)
+
+// Premium Gradients Light
+val gradPrimary = listOf(Color(0xFF6366F1), Color(0xFF8B5CF6))
+val gradSecondary = listOf(Color(0xFFEC4899), Color(0xFFF43F5E))
+val gradSurface = listOf(Color(0xFFFFFFFF), Color(0xFFF1F5F9))
+
 // Dark theme
 val primaryDark = Color(0xFF818CF8) // Indigo lighter
 val onPrimaryDark = Color(0xFF1E1B4B)
@@ -59,6 +69,15 @@ val errorDark = Color(0xFFF87171)
 val onErrorDark = Color(0xFF450A0A)
 val errorContainerDark = Color(0xFF7F1D1D)
 val onErrorContainerDark = Color(0xFFFEE2E2)
+
+// Glass variants Dark
+val glassBlack = Color(0xCC0F172A)
+val glassIndigoDark = Color(0x33818CF8)
+val glassSurfaceDark = Color(0x991E293B)
+
+// Premium Gradients Dark
+val gradPrimaryDark = listOf(Color(0xFF4F46E5), Color(0xFF7C3AED))
+val gradSurfaceDark = listOf(Color(0xFF1E293B), Color(0xFF0F172A))
 
 // Accent colors & Rarities
 val xpGold = Color(0xFFFFD700)

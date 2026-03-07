@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aspharier.questlife.core.ui.animations.FadeInEntrance
+import com.aspharier.questlife.core.ui.animations.bounceClickable
 import com.aspharier.questlife.presentation.habits.AnimatedHabitCard
 import com.aspharier.questlife.presentation.habits.CreateHabitSheet
 import com.aspharier.questlife.presentation.habits.HabitsEvent
@@ -80,14 +82,16 @@ fun HomeScreen() {
                                                 modifier = Modifier.padding(horizontal = 16.dp)
                                         )
                                         Spacer(Modifier.height(12.dp))
-                                        questsState.dailyQuests.forEach { quest ->
-                                                Box(
-                                                        modifier =
-                                                                Modifier.padding(
-                                                                        horizontal = 16.dp,
-                                                                        vertical = 6.dp
-                                                                )
-                                                ) { QuestCard(quest = quest) }
+                                        questsState.dailyQuests.forEachIndexed { index, quest ->
+                                                FadeInEntrance(index = index) {
+                                                        Box(
+                                                                modifier =
+                                                                        Modifier.padding(
+                                                                                horizontal = 16.dp,
+                                                                                vertical = 6.dp
+                                                                        )
+                                                        ) { QuestCard(quest = quest) }
+                                                }
                                         }
                                         Spacer(Modifier.height(24.dp))
                                 }
@@ -114,33 +118,39 @@ fun HomeScreen() {
 
                         items(habitsState.habits.take(5), key = { it.habit.id }) { habitWithStreak
                                 ->
-                                Spacer(Modifier.height(12.dp))
-                                AnimatedHabitCard(
-                                        habitName = habitWithStreak.habit.name,
-                                        meta =
-                                                "${habitWithStreak.habit.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }} · ${habitWithStreak.habit.category.name.lowercase().replaceFirstChar { it.uppercase() }}",
-                                        isCompleted =
-                                                completionState.completedHabitId ==
-                                                        habitWithStreak.habit.id,
-                                        isCompletedToday = habitWithStreak.isCompletedToday,
-                                        streak = habitWithStreak.currentStreak,
-                                        xpGained =
-                                                if (completionState.completedHabitId ==
-                                                                habitWithStreak.habit.id
-                                                )
-                                                        completionState.xpGained
-                                                else null,
-                                        onAnimationEnd = { habitsViewModel.clearCompletionState() },
-                                        onClick = {
-                                                if (!habitWithStreak.isCompletedToday)
-                                                        habitsViewModel.onEvent(
-                                                                HabitsEvent.CompleteHabit(
-                                                                        habitWithStreak.habit
-                                                                )
+                                val index = habitsState.habits.indexOf(habitWithStreak)
+                                FadeInEntrance(index = index + questsState.dailyQuests.size) {
+                                        Spacer(Modifier.height(12.dp))
+                                        AnimatedHabitCard(
+                                                habitName = habitWithStreak.habit.name,
+                                                meta =
+                                                        "${habitWithStreak.habit.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }} · ${habitWithStreak.habit.category.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                                                isCompleted =
+                                                        completionState.completedHabitId ==
+                                                                habitWithStreak.habit.id,
+                                                isCompletedToday = habitWithStreak.isCompletedToday,
+                                                streak = habitWithStreak.currentStreak,
+                                                xpGained =
+                                                        if (completionState.completedHabitId ==
+                                                                        habitWithStreak.habit.id
                                                         )
-                                        },
-                                        onLongPress = {}
-                                )
+                                                                completionState.xpGained
+                                                        else null,
+                                                onAnimationEnd = {
+                                                        habitsViewModel.clearCompletionState()
+                                                },
+                                                onClick = {
+                                                        if (!habitWithStreak.isCompletedToday)
+                                                                habitsViewModel.onEvent(
+                                                                        HabitsEvent.CompleteHabit(
+                                                                                habitWithStreak
+                                                                                        .habit
+                                                                        )
+                                                                )
+                                                },
+                                                onLongPress = {}
+                                        )
+                                }
                         }
                 }
 
@@ -149,10 +159,13 @@ fun HomeScreen() {
                         LevelUpAnimation(level = profileState.level)
                 }
 
-                // FAB
+                // FAB with bounce effect
                 FloatingActionButton(
                         onClick = { showSheet = true },
-                        modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp),
+                        modifier =
+                                Modifier.align(Alignment.BottomEnd).padding(24.dp).bounceClickable {
+                                        showSheet = true
+                                },
                         containerColor = MaterialTheme.colorScheme.primary
                 ) { Text("⚔️", fontSize = 22.sp) }
 

@@ -1,6 +1,7 @@
 package com.aspharier.questlife.presentation.quests
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -12,7 +13,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aspharier.questlife.core.ui.animations.FadeInEntrance
+import com.aspharier.questlife.core.ui.animations.GlassCard
+import com.aspharier.questlife.core.ui.animations.bounceClickable
 import com.aspharier.questlife.domain.model.Quest
 
 @Composable
@@ -125,8 +128,13 @@ fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
                                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                                                 modifier = Modifier.fillMaxSize()
                                         ) {
-                                                items(quests, key = { it.id }) { quest ->
-                                                        QuestCard(quest = quest)
+                                                itemsIndexed(
+                                                        quests,
+                                                        key = { _, quest -> quest.id }
+                                                ) { index, quest ->
+                                                        FadeInEntrance(index = index) {
+                                                                QuestCard(quest = quest)
+                                                        }
                                                 }
                                         }
                                 }
@@ -147,21 +155,16 @@ fun QuestCard(quest: Quest) {
                         targetValue =
                                 if (quest.isCompleted)
                                         MaterialTheme.colorScheme.primaryContainer.copy(
-                                                alpha = 0.5f
+                                                alpha = 0.3f
                                         )
-                                else MaterialTheme.colorScheme.surfaceVariant,
+                                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                         animationSpec = tween(400),
                         label = "cardColor"
                 )
 
-        Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = cardColor),
-                elevation =
-                        CardDefaults.cardElevation(
-                                defaultElevation = if (quest.isCompleted) 1.dp else 3.dp
-                        )
+        GlassCard(
+                modifier = Modifier.fillMaxWidth().bounceClickable {},
+                alpha = if (quest.isCompleted) 0.4f else 0.6f
         ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                         Row(

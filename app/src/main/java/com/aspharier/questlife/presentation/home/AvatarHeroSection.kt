@@ -1,25 +1,20 @@
 package com.aspharier.questlife.presentation.home
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,12 +38,44 @@ fun AvatarHeroSection(level: Int, totalXp: Int, progress: Float) {
                                 .padding(horizontal = 16.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
+                // Floating animation for Avatar
+                val infiniteTransition = rememberInfiniteTransition(label = "avatarFloat")
+                val floatOffset by
+                        infiniteTransition.animateFloat(
+                                initialValue = -4f,
+                                targetValue = 4f,
+                                animationSpec =
+                                        infiniteRepeatable(
+                                                animation = tween(2000, easing = EaseInOutSine),
+                                                repeatMode = RepeatMode.Reverse
+                                        ),
+                                label = "float"
+                        )
+
                 // Avatar circle with gradient background
                 Box(
                         modifier =
                                 Modifier.size(110.dp)
+                                        .graphicsLayer { translationY = floatOffset.dp.toPx() }
+                                        .shadow(
+                                                12.dp,
+                                                CircleShape,
+                                                spotColor = MaterialTheme.colorScheme.primary
+                                        )
                                         .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.primaryContainer),
+                                        .background(
+                                                Brush.radialGradient(
+                                                        colors =
+                                                                listOf(
+                                                                        MaterialTheme.colorScheme
+                                                                                .primaryContainer,
+                                                                        MaterialTheme.colorScheme
+                                                                                .primary.copy(
+                                                                                alpha = 0.3f
+                                                                        )
+                                                                )
+                                                )
+                                        ),
                         contentAlignment = Alignment.Center
                 ) { Text("⚔️", fontSize = 52.sp) }
 
@@ -82,16 +109,29 @@ fun AvatarHeroSection(level: Int, totalXp: Int, progress: Float) {
                 Box(
                         modifier =
                                 Modifier.fillMaxWidth(0.75f)
-                                        .height(10.dp)
+                                        .height(12.dp)
                                         .clip(RoundedCornerShape(50))
-                                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                                        .background(
+                                                MaterialTheme.colorScheme.surfaceVariant.copy(
+                                                        alpha = 0.5f
+                                                )
+                                        )
                 ) {
+                        // Background glow
                         Box(
                                 modifier =
                                         Modifier.fillMaxWidth(animatedProgress)
-                                                .height(10.dp)
+                                                .height(12.dp)
                                                 .clip(RoundedCornerShape(50))
-                                                .background(xpGold)
+                                                .background(
+                                                        Brush.horizontalGradient(
+                                                                colors =
+                                                                        listOf(
+                                                                                xpGold,
+                                                                                Color(0xFFFFA000)
+                                                                        )
+                                                        )
+                                                )
                         )
                 }
 

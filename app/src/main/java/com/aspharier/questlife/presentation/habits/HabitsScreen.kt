@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aspharier.questlife.core.ui.animations.FadeInEntrance
+import com.aspharier.questlife.core.ui.animations.bounceClickable
 import com.aspharier.questlife.domain.model.HabitWithStreak
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,8 +56,11 @@ fun HabitsScreen(viewModel: HabitsViewModel = hiltViewModel()) {
         }
 
         FloatingActionButton(
-                onClick = { showSheet = true },
-                modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp),
+                onClick = { /* Handled by bounceClickable */},
+                modifier =
+                        Modifier.align(Alignment.BottomEnd).padding(24.dp).bounceClickable {
+                            showSheet = true
+                        },
                 containerColor = MaterialTheme.colorScheme.primary
         ) { Text("⚔️") }
 
@@ -94,24 +99,26 @@ private fun HabitList(
             )
         }
 
-        items(items = habits, key = { it.habit.id }) { habitWithStreak ->
-            AnimatedHabitCard(
-                    habitName = habitWithStreak.habit.name,
-                    meta =
-                            "${habitWithStreak.habit.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }} · ${habitWithStreak.habit.category.name.lowercase().replaceFirstChar { it.uppercase() }}",
-                    isCompleted = completionState.completedHabitId == habitWithStreak.habit.id,
-                    isCompletedToday = habitWithStreak.isCompletedToday,
-                    streak = habitWithStreak.currentStreak,
-                    xpGained =
-                            if (completionState.completedHabitId == habitWithStreak.habit.id)
-                                    completionState.xpGained
-                            else null,
-                    onAnimationEnd = onClearCompletion,
-                    onClick = {
-                        if (!habitWithStreak.isCompletedToday) onComplete(habitWithStreak)
-                    },
-                    onLongPress = { onDeactivate(habitWithStreak.habit.id) }
-            )
+        itemsIndexed(items = habits, key = { _, it -> it.habit.id }) { index, habitWithStreak ->
+            FadeInEntrance(index = index) {
+                AnimatedHabitCard(
+                        habitName = habitWithStreak.habit.name,
+                        meta =
+                                "${habitWithStreak.habit.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }} · ${habitWithStreak.habit.category.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                        isCompleted = completionState.completedHabitId == habitWithStreak.habit.id,
+                        isCompletedToday = habitWithStreak.isCompletedToday,
+                        streak = habitWithStreak.currentStreak,
+                        xpGained =
+                                if (completionState.completedHabitId == habitWithStreak.habit.id)
+                                        completionState.xpGained
+                                else null,
+                        onAnimationEnd = onClearCompletion,
+                        onClick = {
+                            if (!habitWithStreak.isCompletedToday) onComplete(habitWithStreak)
+                        },
+                        onLongPress = { onDeactivate(habitWithStreak.habit.id) }
+                )
+            }
         }
     }
 }

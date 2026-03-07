@@ -9,6 +9,7 @@ fun QuestLifeTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
     MaterialTheme(
             colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
             typography = QuestLifeTypography,
+            shapes = QuestLifeShapes,
             content = content
     )
 }
