@@ -65,22 +65,27 @@ fun AnimatedHabitCard(
 
         val glowAlpha by
                 animateFloatAsState(
-                        targetValue = if (animate) 0.35f else 0f,
-                        animationSpec = tween(600),
+                        targetValue = if (animate) 0.45f else 0f, // Slightly higher completion glow
+                        animationSpec = tween(400), // Faster completion animation
                         label = "glow"
                 )
 
         LaunchedEffect(isCompleted) {
                 if (isCompleted) {
                         animate = true
-                        delay(800)
+                        delay(500) // Reduced delay
                         animate = false
-                        delay(200)
+                        delay(100)
                         onAnimationEnd()
                 }
         }
 
-        Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).scale(scale)) {
+        Box(
+                modifier =
+                        Modifier.fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 4.dp)
+                                .scale(scale)
+        ) {
                 QuestCard(
                         modifier =
                                 Modifier.fillMaxWidth()
@@ -89,7 +94,7 @@ fun AnimatedHabitCard(
                                                 onLongClick = onLongPress
                                         )
                 ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(modifier = Modifier.padding(12.dp)) { // Reduced padding from 16.dp
                                 Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -126,7 +131,7 @@ fun AnimatedHabitCard(
                                         }
                                 }
 
-                                Spacer(Modifier.height(2.dp))
+                                Spacer(Modifier.height(4.dp)) // Slightly more space for the title
 
                                 Text(
                                         text = habitName,
@@ -139,8 +144,6 @@ fun AnimatedHabitCard(
                                                 else MaterialTheme.colorScheme.onSurface
                                 )
 
-                                Spacer(Modifier.height(6.dp))
-
                                 Row(
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         modifier = Modifier.fillMaxWidth(),
@@ -148,7 +151,10 @@ fun AnimatedHabitCard(
                                 ) {
                                         Text(
                                                 text = meta,
-                                                style = MaterialTheme.typography.labelLarge,
+                                                style =
+                                                        MaterialTheme.typography
+                                                                .labelMedium, // Changed from
+                                                // labelLarge
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         // Real streak from DB

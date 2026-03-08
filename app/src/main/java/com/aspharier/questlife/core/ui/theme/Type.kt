@@ -15,74 +15,73 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.questlife.app.R
 import com.aspharier.questlife.core.ui.animations.GlassCard
 import com.aspharier.questlife.core.ui.animations.bounceClickable
+import com.questlife.app.R
 
 // Custom Typography
 
-val Inter = FontFamily(
-    Font(R.font.inter_regular),
-    Font(R.font.inter_medium),
-    Font(R.font.inter_bold)
-)
+val Inter =
+        FontFamily(Font(R.font.inter_regular), Font(R.font.inter_medium), Font(R.font.inter_bold))
 
-val Pixel = FontFamily(
-    Font(R.font.pixelify_sans)
-)
+val Pixel = FontFamily(Font(R.font.pixelify_sans))
 
-val QuestLifeTypography = Typography(
-    headlineLarge = TextStyle(
-        fontFamily = Pixel,
-        fontSize = 32.sp,
-        letterSpacing = 1.sp
-    ),
-    titleLarge = TextStyle(
-        fontFamily = Inter,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 22.sp
-    ),
-    bodyLarge = TextStyle(
-        fontFamily = Inter,
-        fontSize = 16.sp
-    ),
-    labelLarge = TextStyle(
-        fontFamily = Inter,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
-    )
-)
+val QuestLifeTypography =
+        Typography(
+                headlineLarge =
+                        TextStyle(
+                                fontFamily = Pixel,
+                                fontSize = 28.sp, // Slightly smaller
+                                letterSpacing = 1.sp
+                        ),
+                titleLarge =
+                        TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 18.sp // Reduced from 22sp for more compact cards
+                        ),
+                bodyLarge =
+                        TextStyle(
+                                fontFamily = Inter,
+                                fontSize = 14.sp // Reduced from 16sp
+                        ),
+                labelLarge =
+                        TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 12.sp // Reduced from 14sp
+                        ),
+                labelMedium =
+                        TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 11.sp
+                        )
+        )
 
 @Composable
-fun TextureOverlay(
-    @DrawableRes texture: Int,
-    alpha: Float,
-    modifier: Modifier = Modifier
-) {
-    Image(
-        painter = painterResource(texture),
-        contentDescription = null,
-        contentScale = ContentScale.Fit,
-        modifier = modifier.fillMaxSize(),
-        alpha = alpha
-    )
+fun TextureOverlay(@DrawableRes texture: Int, alpha: Float, modifier: Modifier = Modifier) {
+        Image(
+                painter = painterResource(texture),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = modifier.fillMaxSize(),
+                alpha = alpha
+        )
 }
 
 @Composable
 fun QuestCard(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
-    content: @Composable BoxScope.() -> Unit
+        modifier: Modifier = Modifier,
+        onClick: () -> Unit = {},
+        content: @Composable BoxScope.() -> Unit
 ) {
-    GlassCard(
-        modifier = modifier
-            .bounceClickable(onClick = onClick)
-    ) {
-        TextureOverlay(
-            texture = R.drawable.tex_paper_noise,
-            alpha = if (isSystemInDarkTheme()) 0.05f else 0.03f
-        )
+        GlassCard(modifier = modifier.bounceClickable(onClick = onClick)) {
+                TextureOverlay(
+                        texture = R.drawable.tex_paper_noise,
+                        alpha = if (isSystemInDarkTheme()) 0.03f else 0.02f // Reduced opacity
+                )
 
-        this.content()
-    }
+                this.content()
+        }
 }
