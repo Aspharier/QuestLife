@@ -1,18 +1,17 @@
 package com.aspharier.questlife.presentation.quests
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,51 +25,91 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aspharier.questlife.core.ui.animations.FadeInEntrance
-import com.aspharier.questlife.core.ui.animations.GlassCard
 import com.aspharier.questlife.core.ui.animations.bounceClickable
+import com.aspharier.questlife.core.ui.components.GamePanel
+import com.aspharier.questlife.core.ui.components.GameSectionHeader
+import com.aspharier.questlife.core.ui.components.StatBar
+import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import com.aspharier.questlife.domain.model.Quest
 
 @Composable
 fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-        var selectedTab by remember { mutableStateOf(0) }
-        val tabs = listOf("Daily", "Weekly", "Achievements")
+        var selectedTab by remember { mutableIntStateOf(0) }
+        val tabs = listOf("Daily" to "📋", "Weekly" to "📅", "Achievements" to "🏆")
+        val gameColors = LocalGameColors.current
 
         Column(modifier = Modifier.fillMaxSize()) {
-                Text(
-                        text = "Quests",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+                GameSectionHeader(
+                        title = "Quests",
+                        icon = "📜",
+                        modifier = Modifier.padding(top = 12.dp)
                 )
 
-                TabRow(
-                        selectedTabIndex = selectedTab,
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.primary
+                Spacer(Modifier.height(8.dp))
+
+                // Game-style segmented tab bar
+                Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                        tabs.forEachIndexed { index, title ->
-                                Tab(
-                                        selected = selectedTab == index,
-                                        onClick = { selectedTab = index },
-                                        text = {
+                        tabs.forEachIndexed { index, (title, icon) ->
+                                val selected = selectedTab == index
+                                Box(
+                                        modifier =
+                                                Modifier.weight(1f)
+                                                        .clip(RoundedCornerShape(12.dp))
+                                                        .background(
+                                                                if (selected)
+                                                                        MaterialTheme.colorScheme
+                                                                                .primary.copy(
+                                                                                alpha = 0.15f
+                                                                        )
+                                                                else gameColors.panelBackground
+                                                        )
+                                                        .then(
+                                                                if (selected) Modifier
+                                                                else
+                                                                        Modifier.background(
+                                                                                Color.Transparent
+                                                                        )
+                                                        )
+                                                        .clickable { selectedTab = index }
+                                                        .padding(vertical = 10.dp),
+                                        contentAlignment = Alignment.Center
+                                ) {
+                                        Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.Center
+                                        ) {
+                                                Text(text = icon, fontSize = 14.sp)
+                                                Spacer(Modifier.width(4.dp))
                                                 Text(
                                                         text = title,
+                                                        style = MaterialTheme.typography.labelLarge,
                                                         fontWeight =
-                                                                if (selectedTab == index)
-                                                                        FontWeight.Bold
-                                                                else FontWeight.Normal
+                                                                if (selected) FontWeight.Bold
+                                                                else FontWeight.Normal,
+                                                        color =
+                                                                if (selected)
+                                                                        MaterialTheme.colorScheme
+                                                                                .primary
+                                                                else
+                                                                        MaterialTheme.colorScheme
+                                                                                .onSurfaceVariant
                                                 )
                                         }
-                                )
+                                }
                         }
                 }
+
+                Spacer(Modifier.height(8.dp))
 
                 if (uiState.isLoading) {
                         Box(
                                 modifier = Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.Center
-                        ) { CircularProgressIndicator() }
+                        ) { CircularProgressIndicator(color = MaterialTheme.colorScheme.primary) }
                 } else {
                         AnimatedContent(
                                 targetState = selectedTab,
@@ -122,10 +161,10 @@ fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
                                         LazyColumn(
                                                 contentPadding =
                                                         PaddingValues(
-                                                                vertical = 12.dp,
+                                                                vertical = 8.dp,
                                                                 horizontal = 16.dp
                                                         ),
-                                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                                verticalArrangement = Arrangement.spacedBy(8.dp),
                                                 modifier = Modifier.fillMaxSize()
                                         ) {
                                                 itemsIndexed(
@@ -145,35 +184,32 @@ fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
 
 @Composable
 fun QuestCard(quest: Quest) {
+        val gameColors = LocalGameColors.current
         val progress =
                 if (quest.conditionTarget > 0)
                         (quest.progressCurrent.toFloat() / quest.conditionTarget).coerceIn(0f, 1f)
                 else 1f
 
-        val cardColor by
-                animateColorAsState(
-                        targetValue =
-                                if (quest.isCompleted)
-                                        MaterialTheme.colorScheme.primaryContainer.copy(
-                                                alpha = 0.3f
-                                        )
-                                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                        animationSpec = tween(400),
-                        label = "cardColor"
-                )
-
-        GlassCard(
+        GamePanel(
                 modifier = Modifier.fillMaxWidth().bounceClickable {},
-                alpha = if (quest.isCompleted) 0.4f else 0.6f
+                borderColor =
+                        if (quest.isCompleted) gameColors.completedGreen.copy(alpha = 0.3f)
+                        else gameColors.panelBorder,
+                glowColor =
+                        if (quest.isCompleted) gameColors.completedGreen.copy(alpha = 0.05f)
+                        else gameColors.panelBorderGlow
         ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(14.dp)) {
                         Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                         ) {
-                                // Title + optional badge
-                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                // Title + badge
+                                Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.weight(1f, fill = false)
+                                ) {
                                         Text(
                                                 text = quest.title,
                                                 style = MaterialTheme.typography.titleMedium,
@@ -182,23 +218,22 @@ fun QuestCard(quest: Quest) {
                                                         if (quest.isCompleted)
                                                                 MaterialTheme.colorScheme.onSurface
                                                                         .copy(alpha = 0.6f)
-                                                        else MaterialTheme.colorScheme.onSurface,
-                                                modifier = Modifier.weight(1f, fill = false)
+                                                        else MaterialTheme.colorScheme.onSurface
                                         )
                                         quest.rewardBadge?.let { badge ->
                                                 Spacer(Modifier.width(6.dp))
-                                                Text(text = badge, fontSize = 16.sp)
+                                                Text(text = badge, fontSize = 14.sp)
                                         }
                                 }
 
-                                // Completed or XP reward chip
+                                // Status chip
                                 if (quest.isCompleted) {
                                         Box(
                                                 modifier =
                                                         Modifier.clip(RoundedCornerShape(8.dp))
                                                                 .background(
-                                                                        Color(0xFF22C55E)
-                                                                                .copy(alpha = 0.2f)
+                                                                        gameColors.completedGreen
+                                                                                .copy(alpha = 0.15f)
                                                                 )
                                                                 .padding(
                                                                         horizontal = 10.dp,
@@ -207,8 +242,8 @@ fun QuestCard(quest: Quest) {
                                         ) {
                                                 Text(
                                                         text = "✓ Done",
-                                                        fontSize = 12.sp,
-                                                        color = Color(0xFF22C55E),
+                                                        fontSize = 11.sp,
+                                                        color = gameColors.completedGreen,
                                                         fontWeight = FontWeight.Bold
                                                 )
                                         }
@@ -229,7 +264,7 @@ fun QuestCard(quest: Quest) {
                                         ) {
                                                 Text(
                                                         text = "+${quest.rewardXp} XP",
-                                                        fontSize = 12.sp,
+                                                        fontSize = 11.sp,
                                                         color = MaterialTheme.colorScheme.primary,
                                                         fontWeight = FontWeight.Bold
                                                 )
@@ -266,17 +301,15 @@ fun QuestCard(quest: Quest) {
                                         )
                                 }
                                 Spacer(Modifier.height(4.dp))
-                                LinearProgressIndicator(
-                                        progress = { progress },
-                                        modifier =
-                                                Modifier.fillMaxWidth()
-                                                        .height(8.dp)
-                                                        .clip(RoundedCornerShape(50)),
-                                        color =
-                                                if (quest.isCompleted) Color(0xFF22C55E)
+                                StatBar(
+                                        progress = progress,
+                                        barColor =
+                                                if (quest.isCompleted) gameColors.completedGreen
                                                 else MaterialTheme.colorScheme.primary,
-                                        trackColor =
-                                                MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                                        barColorEnd =
+                                                if (quest.isCompleted) gameColors.completedGreen
+                                                else MaterialTheme.colorScheme.tertiary,
+                                        height = 8.dp
                                 )
                         }
                 }

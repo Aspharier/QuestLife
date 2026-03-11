@@ -37,8 +37,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aspharier.questlife.core.ui.theme.QuestCard
-import com.aspharier.questlife.core.ui.theme.streakFlame
+import com.aspharier.questlife.core.ui.components.GamePanel
+import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -54,26 +54,27 @@ fun AnimatedHabitCard(
         onClick: () -> Unit,
         onLongPress: () -> Unit
 ) {
+        val gameColors = LocalGameColors.current
         var animate by remember { mutableStateOf(false) }
 
         val scale by
                 animateFloatAsState(
-                        targetValue = if (animate) 1.05f else 1f,
+                        targetValue = if (animate) 1.04f else 1f,
                         animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
                         label = "scale"
                 )
 
         val glowAlpha by
                 animateFloatAsState(
-                        targetValue = if (animate) 0.45f else 0f, // Slightly higher completion glow
-                        animationSpec = tween(400), // Faster completion animation
+                        targetValue = if (animate) 0.5f else 0f,
+                        animationSpec = tween(400),
                         label = "glow"
                 )
 
         LaunchedEffect(isCompleted) {
                 if (isCompleted) {
                         animate = true
-                        delay(500) // Reduced delay
+                        delay(500)
                         animate = false
                         delay(100)
                         onAnimationEnd()
@@ -83,24 +84,50 @@ fun AnimatedHabitCard(
         Box(
                 modifier =
                         Modifier.fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 4.dp)
+                                .padding(horizontal = 14.dp, vertical = 4.dp)
                                 .scale(scale)
         ) {
-                QuestCard(
+                GamePanel(
                         modifier =
                                 Modifier.fillMaxWidth()
                                         .combinedClickable(
                                                 onClick = onClick,
                                                 onLongClick = onLongPress
-                                        )
+                                        ),
+                        borderColor =
+                                when {
+                                        isCompletedToday ->
+                                                gameColors.completedGreen.copy(alpha = 0.4f)
+                                        streak >= 5 -> gameColors.streakFlame.copy(alpha = 0.4f)
+                                        else -> gameColors.panelBorder
+                                },
+                        glowColor =
+                                when {
+                                        isCompletedToday ->
+                                                gameColors.completedGreen.copy(alpha = 0.05f)
+                                        else -> gameColors.panelBorderGlow
+                                }
                 ) {
-                        Column(modifier = Modifier.padding(12.dp)) { // Reduced padding from 16.dp
+                        Column(modifier = Modifier.padding(14.dp)) {
                                 Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                        // Completed-today checkmark badge
+                                        // Habit name
+                                        Text(
+                                                text = habitName,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontWeight = FontWeight.SemiBold,
+                                                color =
+                                                        if (isCompletedToday)
+                                                                MaterialTheme.colorScheme.onSurface
+                                                                        .copy(alpha = 0.5f)
+                                                        else MaterialTheme.colorScheme.onSurface,
+                                                modifier = Modifier.weight(1f, fill = false)
+                                        )
+
+                                        // Completed-today badge
                                         if (isCompletedToday) {
                                                 Box(
                                                         modifier =
@@ -110,7 +137,8 @@ fun AnimatedHabitCard(
                                                                                 )
                                                                         )
                                                                         .background(
-                                                                                Color(0xFF22C55E)
+                                                                                gameColors
+                                                                                        .completedGreen
                                                                                         .copy(
                                                                                                 alpha =
                                                                                                         0.15f
@@ -124,40 +152,28 @@ fun AnimatedHabitCard(
                                                         Text(
                                                                 text = "✓ Done",
                                                                 fontSize = 11.sp,
-                                                                color = Color(0xFF22C55E),
+                                                                color = gameColors.completedGreen,
                                                                 fontWeight = FontWeight.Bold
                                                         )
                                                 }
                                         }
                                 }
 
-                                Spacer(Modifier.height(4.dp)) // Slightly more space for the title
-
-                                Text(
-                                        text = habitName,
-                                        style = MaterialTheme.typography.titleLarge,
-                                        color =
-                                                if (isCompletedToday)
-                                                        MaterialTheme.colorScheme.onSurface.copy(
-                                                                alpha = 0.5f
-                                                        )
-                                                else MaterialTheme.colorScheme.onSurface
-                                )
+                                Spacer(Modifier.height(6.dp))
 
                                 Row(
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         modifier = Modifier.fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
+                                        // Meta: difficulty + category
                                         Text(
                                                 text = meta,
-                                                style =
-                                                        MaterialTheme.typography
-                                                                .labelMedium, // Changed from
-                                                // labelLarge
+                                                style = MaterialTheme.typography.labelMedium,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
-                                        // Real streak from DB
+
+                                        // Streak display
                                         if (streak > 0) {
                                                 Row(
                                                         verticalAlignment =
@@ -170,9 +186,8 @@ fun AnimatedHabitCard(
                                                                 style =
                                                                         MaterialTheme.typography
                                                                                 .labelLarge,
-                                                                color =
-                                                                        MaterialTheme.colorScheme
-                                                                                .onSurfaceVariant
+                                                                color = gameColors.streakFlame,
+                                                                fontWeight = FontWeight.Bold
                                                         )
                                                 }
                                         }
@@ -192,14 +207,14 @@ fun AnimatedHabitCard(
                                 Text(
                                         text = "🔥 $streak Days!",
                                         style = MaterialTheme.typography.headlineMedium,
-                                        color = streakFlame,
+                                        color = gameColors.streakFlame,
                                         modifier = Modifier.scale(scale),
                                         fontWeight = FontWeight.ExtraBold
                                 )
                         }
                 }
 
-                // Glow Overlay on completion animation
+                // Glow Overlay on completion
                 if (glowAlpha > 0f) {
                         Box(
                                 modifier =
@@ -240,6 +255,7 @@ fun AnimatedHabitCard(
 
 @Composable
 fun XPPopup(xp: Int) {
+        val gameColors = LocalGameColors.current
         var isAnimating by remember { mutableStateOf(false) }
 
         val offsetY by
@@ -269,7 +285,7 @@ fun XPPopup(xp: Int) {
                         text = "+$xp XP ⚡",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFFFD700)
+                        color = gameColors.xpBar
                 )
         }
 }

@@ -1,15 +1,17 @@
 package com.aspharier.questlife.presentation.habits
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -20,12 +22,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aspharier.questlife.core.ui.animations.FadeInEntrance
 import com.aspharier.questlife.core.ui.animations.bounceClickable
+import com.aspharier.questlife.core.ui.components.GameSectionHeader
+import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import com.aspharier.questlife.domain.model.HabitWithStreak
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,6 +41,7 @@ fun HabitsScreen(viewModel: HabitsViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val completionState by viewModel.completionState.collectAsStateWithLifecycle()
     var showSheet by remember { mutableStateOf(false) }
+    val gameColors = LocalGameColors.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         when {
@@ -55,17 +63,38 @@ fun HabitsScreen(viewModel: HabitsViewModel = hiltViewModel()) {
             }
         }
 
-        FloatingActionButton(
-                onClick = { /* Handled by bounceClickable */},
+        // Game-style FAB — fixed onClick handler
+        Box(
                 modifier =
-                        Modifier.align(Alignment.BottomEnd).padding(24.dp).bounceClickable {
-                            showSheet = true
-                        },
-                containerColor = MaterialTheme.colorScheme.primary
-        ) { Text("⚔️") }
+                        Modifier.align(Alignment.BottomEnd)
+                                .padding(20.dp)
+                                .bounceClickable { showSheet = true }
+                                .shadow(
+                                        elevation = 12.dp,
+                                        shape = CircleShape,
+                                        spotColor = gameColors.fabGlow.copy(alpha = 0.5f)
+                                )
+                                .size(56.dp)
+                                .background(
+                                        Brush.radialGradient(
+                                                colors =
+                                                        listOf(
+                                                                gameColors.fabGlow,
+                                                                gameColors.fabGlow.copy(
+                                                                        alpha = 0.8f
+                                                                )
+                                                        )
+                                        ),
+                                        CircleShape
+                                ),
+                contentAlignment = Alignment.Center
+        ) { Text("⚔️", fontSize = 24.sp) }
 
         if (showSheet) {
-            ModalBottomSheet(onDismissRequest = { showSheet = false }) {
+            ModalBottomSheet(
+                    onDismissRequest = { showSheet = false },
+                    containerColor = MaterialTheme.colorScheme.surface
+            ) {
                 CreateHabitSheet(
                         onCreate = { event ->
                             viewModel.onEvent(event)
@@ -89,13 +118,13 @@ private fun HabitList(
     LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 96.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         item {
-            Text(
-                    text = "Today's Habits",
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(16.dp)
+            GameSectionHeader(
+                    title = "Today's Habits",
+                    icon = "⚔️",
+                    modifier = Modifier.padding(top = 12.dp)
             )
         }
 
@@ -126,7 +155,7 @@ private fun HabitList(
 @Composable
 private fun LoadingState() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -136,7 +165,8 @@ private fun EmptyState() {
         Text(
                 text = "No habits for today.\nTap ⚔️ to create your first quest!",
                 style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

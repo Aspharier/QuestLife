@@ -28,35 +28,53 @@ val Pixel = FontFamily(Font(R.font.pixelify_sans))
 
 val QuestLifeTypography =
         Typography(
+                displayLarge =
+                        TextStyle(fontFamily = Pixel, fontSize = 36.sp, letterSpacing = 1.5.sp),
                 headlineLarge =
-                        TextStyle(
-                                fontFamily = Pixel,
-                                fontSize = 28.sp, // Slightly smaller
-                                letterSpacing = 1.sp
-                        ),
+                        TextStyle(fontFamily = Pixel, fontSize = 28.sp, letterSpacing = 1.sp),
+                headlineMedium =
+                        TextStyle(fontFamily = Pixel, fontSize = 22.sp, letterSpacing = 0.8.sp),
+                headlineSmall =
+                        TextStyle(fontFamily = Pixel, fontSize = 18.sp, letterSpacing = 0.5.sp),
                 titleLarge =
                         TextStyle(
                                 fontFamily = Inter,
                                 fontWeight = FontWeight.SemiBold,
-                                fontSize = 18.sp // Reduced from 22sp for more compact cards
+                                fontSize = 18.sp
                         ),
-                bodyLarge =
+                titleMedium =
                         TextStyle(
                                 fontFamily = Inter,
-                                fontSize = 14.sp // Reduced from 16sp
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 15.sp
                         ),
+                titleSmall =
+                        TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 13.sp
+                        ),
+                bodyLarge = TextStyle(fontFamily = Inter, fontSize = 14.sp),
+                bodyMedium = TextStyle(fontFamily = Inter, fontSize = 13.sp),
+                bodySmall = TextStyle(fontFamily = Inter, fontSize = 12.sp),
                 labelLarge =
                         TextStyle(
                                 fontFamily = Inter,
                                 fontWeight = FontWeight.Medium,
-                                fontSize = 12.sp // Reduced from 14sp
+                                fontSize = 12.sp
                         ),
                 labelMedium =
                         TextStyle(
                                 fontFamily = Inter,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 11.sp
-                        )
+                        ),
+                labelSmall =
+                        TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 10.sp
+                        ),
         )
 
 @Composable
@@ -79,7 +97,7 @@ fun QuestCard(
         GlassCard(modifier = modifier.bounceClickable(onClick = onClick)) {
                 TextureOverlay(
                         texture = R.drawable.tex_paper_noise,
-                        alpha = if (isSystemInDarkTheme()) 0.03f else 0.02f // Reduced opacity
+                        alpha = if (isSystemInDarkTheme()) 0.03f else 0.02f
                 )
 
                 this.content()

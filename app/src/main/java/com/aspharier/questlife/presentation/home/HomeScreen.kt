@@ -1,15 +1,17 @@
 package com.aspharier.questlife.presentation.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -20,12 +22,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aspharier.questlife.core.ui.animations.FadeInEntrance
 import com.aspharier.questlife.core.ui.animations.bounceClickable
+import com.aspharier.questlife.core.ui.components.GameSectionHeader
+import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import com.aspharier.questlife.presentation.habits.AnimatedHabitCard
 import com.aspharier.questlife.presentation.habits.CreateHabitSheet
 import com.aspharier.questlife.presentation.habits.HabitsEvent
@@ -48,6 +54,7 @@ fun HomeScreen() {
         val questsState by questsViewModel.uiState.collectAsStateWithLifecycle()
 
         var showSheet by remember { mutableStateOf(false) }
+        val gameColors = LocalGameColors.current
 
         Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn(
@@ -55,6 +62,7 @@ fun HomeScreen() {
                         contentPadding = PaddingValues(bottom = 96.dp)
                 ) {
                         item {
+                                Spacer(Modifier.height(8.dp))
                                 AvatarHeroSection(
                                         level = profileState.level,
                                         totalXp = profileState.totalXp,
@@ -63,7 +71,7 @@ fun HomeScreen() {
                         }
 
                         item {
-                                Spacer(Modifier.height(8.dp))
+                                Spacer(Modifier.height(12.dp))
                                 StatsRow(
                                         hp = profileState.stats.hp,
                                         atk = profileState.stats.atk,
@@ -74,33 +82,25 @@ fun HomeScreen() {
                         }
 
                         item {
-                                Spacer(Modifier.height(24.dp))
+                                Spacer(Modifier.height(20.dp))
                                 if (questsState.dailyQuests.isNotEmpty()) {
-                                        Text(
-                                                text = "Daily Quests",
-                                                style = MaterialTheme.typography.headlineLarge,
-                                                modifier = Modifier.padding(horizontal = 16.dp)
-                                        )
-                                        Spacer(Modifier.height(12.dp))
+                                        GameSectionHeader(title = "Daily Quests", icon = "📜")
+                                        Spacer(Modifier.height(8.dp))
                                         questsState.dailyQuests.forEachIndexed { index, quest ->
                                                 FadeInEntrance(index = index) {
                                                         Box(
                                                                 modifier =
                                                                         Modifier.padding(
                                                                                 horizontal = 16.dp,
-                                                                                vertical = 6.dp
+                                                                                vertical = 4.dp
                                                                         )
                                                         ) { QuestCard(quest = quest) }
                                                 }
                                         }
-                                        Spacer(Modifier.height(24.dp))
+                                        Spacer(Modifier.height(16.dp))
                                 }
 
-                                Text(
-                                        text = "Today's Habits",
-                                        style = MaterialTheme.typography.headlineLarge,
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                )
+                                GameSectionHeader(title = "Today's Habits", icon = "⚔️")
                         }
 
                         if (habitsState.habits.isEmpty() && !habitsState.isLoading) {
@@ -120,7 +120,7 @@ fun HomeScreen() {
                                 ->
                                 val index = habitsState.habits.indexOf(habitWithStreak)
                                 FadeInEntrance(index = index + questsState.dailyQuests.size) {
-                                        Spacer(Modifier.height(12.dp))
+                                        Spacer(Modifier.height(8.dp))
                                         AnimatedHabitCard(
                                                 habitName = habitWithStreak.habit.name,
                                                 meta =
@@ -159,18 +159,38 @@ fun HomeScreen() {
                         LevelUpAnimation(level = profileState.level)
                 }
 
-                // FAB with bounce effect
-                FloatingActionButton(
-                        onClick = { showSheet = true },
+                // Game-style FAB
+                Box(
                         modifier =
-                                Modifier.align(Alignment.BottomEnd).padding(24.dp).bounceClickable {
-                                        showSheet = true
-                                },
-                        containerColor = MaterialTheme.colorScheme.primary
-                ) { Text("⚔️", fontSize = 22.sp) }
+                                Modifier.align(Alignment.BottomEnd)
+                                        .padding(20.dp)
+                                        .bounceClickable { showSheet = true }
+                                        .shadow(
+                                                elevation = 12.dp,
+                                                shape = CircleShape,
+                                                spotColor = gameColors.fabGlow.copy(alpha = 0.5f)
+                                        )
+                                        .size(56.dp)
+                                        .background(
+                                                Brush.radialGradient(
+                                                        colors =
+                                                                listOf(
+                                                                        gameColors.fabGlow,
+                                                                        gameColors.fabGlow.copy(
+                                                                                alpha = 0.8f
+                                                                        )
+                                                                )
+                                                ),
+                                                CircleShape
+                                        ),
+                        contentAlignment = Alignment.Center
+                ) { Text("⚔️", fontSize = 24.sp) }
 
                 if (showSheet) {
-                        ModalBottomSheet(onDismissRequest = { showSheet = false }) {
+                        ModalBottomSheet(
+                                onDismissRequest = { showSheet = false },
+                                containerColor = MaterialTheme.colorScheme.surface
+                        ) {
                                 CreateHabitSheet(
                                         onCreate = { event ->
                                                 habitsViewModel.onEvent(event)
