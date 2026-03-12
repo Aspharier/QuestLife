@@ -1,4 +1,4 @@
-# 🎮 How QuestLife Works
+# How QuestLife Works
 
 **QuestLife** is an **RPG-inspired productivity app** that transforms your daily habits and tasks (called **Quests**) into a **character progression system**.
 
@@ -6,7 +6,7 @@ Every positive action you take in real life helps your **digital avatar grow str
 
 ---
 
-# ⚙️ Core Mechanics
+# Core Mechanics
 
 ## 1️⃣ Level & XP (Experience Points)
 
