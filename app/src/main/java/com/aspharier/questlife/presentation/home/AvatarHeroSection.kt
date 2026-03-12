@@ -18,16 +18,25 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aspharier.questlife.core.ui.animations.bounceClickable
 import com.aspharier.questlife.core.ui.components.GamePanel
 import com.aspharier.questlife.core.ui.components.StatBar
 import com.aspharier.questlife.core.ui.theme.LocalGameColors
 
 @Composable
-fun AvatarHeroSection(level: Int, totalXp: Int, progress: Float) {
+fun AvatarHeroSection(
+    level: Int,
+    totalXp: Int,
+    progress: Float,
+    onAvatarClick: () -> Unit
+) {
         val gameColors = LocalGameColors.current
 
         GamePanel(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .bounceClickable { onAvatarClick() },
                 borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                 glowColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
         ) {

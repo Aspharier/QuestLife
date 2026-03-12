@@ -37,12 +37,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.aspharier.questlife.navigation.NavRoute
+import com.aspharier.questlife.core.ui.components.GamePanel
 import com.aspharier.questlife.core.ui.components.GamePanel
 import com.aspharier.questlife.core.ui.components.GameSectionHeader
 import com.aspharier.questlife.core.ui.theme.LocalGameColors
 
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsScreen(
+    navController: NavController,
+    viewModel: SettingsViewModel = hiltViewModel()
+) {
     val darkModeEnabled by viewModel.darkModeEnabled.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
     val context = LocalContext.current
@@ -68,6 +74,15 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                         subtitle = "Edit your hero profile",
                         onClick = {
                             Toast.makeText(context, "Opening Profile...", Toast.LENGTH_SHORT).show()
+                        }
+                )
+                Spacer(Modifier.height(2.dp))
+                GameSettingsItem(
+                        icon = Icons.Filled.Person, // Could use a more specific icon if available
+                        title = "Customize Avatar",
+                        subtitle = "Equip your gear and change appearance",
+                        onClick = {
+                            navController.navigate(NavRoute.Equipment.route)
                         }
                 )
             }

@@ -28,10 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.aspharier.questlife.core.ui.animations.FadeInEntrance
 import com.aspharier.questlife.core.ui.animations.bounceClickable
 import com.aspharier.questlife.core.ui.components.GameSectionHeader
 import com.aspharier.questlife.core.ui.theme.LocalGameColors
+import com.aspharier.questlife.navigation.NavRoute
 import com.aspharier.questlife.presentation.habits.AnimatedHabitCard
 import com.aspharier.questlife.presentation.habits.CreateHabitSheet
 import com.aspharier.questlife.presentation.habits.HabitsEvent
@@ -43,7 +45,7 @@ import com.aspharier.questlife.presentation.quests.QuestsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
         val profileViewModel: ProfileViewModel = hiltViewModel()
         val habitsViewModel: HabitsViewModel = hiltViewModel()
         val questsViewModel: QuestsViewModel = hiltViewModel()
@@ -66,7 +68,8 @@ fun HomeScreen() {
                                 AvatarHeroSection(
                                         level = profileState.level,
                                         totalXp = profileState.totalXp,
-                                        progress = profileState.progressToNextLevel
+                                        progress = profileState.progressToNextLevel,
+                                        onAvatarClick = { navController.navigate(NavRoute.Equipment.route) }
                                 )
                         }
 

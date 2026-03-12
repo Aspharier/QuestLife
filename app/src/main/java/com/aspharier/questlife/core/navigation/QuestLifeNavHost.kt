@@ -62,11 +62,11 @@ fun QuestLifeNavHost() {
                 }
         ) {
             // routes....
-            composable(NavRoute.Home.route) { HomeScreen() }
+            composable(NavRoute.Home.route) { HomeScreen(navController) }
             composable(NavRoute.Habits.route) { HabitsScreen() }
             composable(NavRoute.Quests.route) { QuestsScreen() }
             composable(NavRoute.World.route) { WorldScreen() }
-            composable(NavRoute.Settings.route) { SettingsScreen() }
+            composable(NavRoute.Settings.route) { SettingsScreen(navController = navController) }
             composable(NavRoute.Equipment.route) { EquipmentScreen() }
         }
     }
