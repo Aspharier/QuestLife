@@ -41,8 +41,9 @@ constructor(
             combine(
                             userRepository.observeTotalXp(),
                             habitRepository.observeHabits(),
-                            equipmentRepository.observeEquipped()
-                    ) { totalXp, habits, equipped ->
+                            equipmentRepository.observeEquipped(),
+                            userRepository.observePersona()
+                    ) { totalXp, habits, equipped, persona ->
                 val level = ProgressionSystem.calculateLevel(totalXp)
                 val progress = ProgressionSystem.currentLevelProgress(totalXp)
                 val baseStats = calculateStatsUseCase(level, habits)
@@ -58,10 +59,17 @@ constructor(
                         totalXp = totalXp,
                         progressToNextLevel = progress,
                         levelUp = levelUp,
-                        stats = finalStats
+                        stats = finalStats,
+                        persona = persona
                 )
             }
                     .collect { state -> _uiState.value = state }
+        }
+    }
+
+    fun updatePersona(persona: com.aspharier.questlife.domain.model.Persona) {
+        viewModelScope.launch {
+            userRepository.updatePersona(persona)
         }
     }
 }

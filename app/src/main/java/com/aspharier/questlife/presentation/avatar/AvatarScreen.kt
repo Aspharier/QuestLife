@@ -17,7 +17,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -64,7 +66,10 @@ fun AvatarScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
                                 contentAlignment = Alignment.Center
                         ) {
                                 AvatarRenderer(
-                                        state = AvatarState(isLevelUp = profileUiState.levelUp),
+                                        state = AvatarState(
+                                                avatarClass = profileUiState.persona.avatarClass,
+                                                isLevelUp = profileUiState.levelUp
+                                        ),
                                         modifier = Modifier.fillMaxSize()
                                 )
                         }
@@ -72,12 +77,38 @@ fun AvatarScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
 
                 item {
                         Spacer(Modifier.height(12.dp))
+                        OutlinedTextField(
+                                value = profileUiState.persona.title,
+                                onValueChange = { newTitle ->
+                                        profileViewModel.updatePersona(profileUiState.persona.copy(title = newTitle))
+                                },
+                                label = { Text("Hero Title") },
+                                singleLine = true,
+                                modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(12.dp))
                         Text(
-                                text = "Warrior", // TODO class name based on state
+                                text = "Class: ${profileUiState.persona.avatarClass.name}",
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Bold
                         )
+                        Spacer(Modifier.height(4.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                AvatarClass.entries.forEach { avatarClass ->
+                                        AssistChip(
+                                                onClick = {
+                                                        profileViewModel.updatePersona(profileUiState.persona.copy(avatarClass = avatarClass))
+                                                },
+                                                label = { Text(avatarClass.name.lowercase().replaceFirstChar { it.uppercase() }) },
+                                                leadingIcon = {
+                                                        if (profileUiState.persona.avatarClass == avatarClass) {
+                                                                Text("✓")
+                                                        }
+                                                }
+                                        )
+                                }
+                        }
                         Spacer(Modifier.height(4.dp))
                         Text(
                                 text = "Level ${profileUiState.level}",

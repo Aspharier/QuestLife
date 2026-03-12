@@ -22,12 +22,15 @@ import com.aspharier.questlife.core.ui.animations.bounceClickable
 import com.aspharier.questlife.core.ui.components.GamePanel
 import com.aspharier.questlife.core.ui.components.StatBar
 import com.aspharier.questlife.core.ui.theme.LocalGameColors
+import com.aspharier.questlife.presentation.avatar.AvatarRenderer
+import com.aspharier.questlife.presentation.avatar.AvatarState
 
 @Composable
 fun AvatarHeroSection(
     level: Int,
     totalXp: Int,
     progress: Float,
+    persona: com.aspharier.questlife.domain.model.Persona,
     onAvatarClick: () -> Unit
 ) {
         val gameColors = LocalGameColors.current
@@ -160,7 +163,14 @@ fun AvatarHeroSection(
                                                                 )
                                                         ),
                                         contentAlignment = Alignment.Center
-                                ) { Text("⚔️", fontSize = 48.sp) }
+                                ) {
+                                        AvatarRenderer(
+                                                state = AvatarState(
+                                                        avatarClass = persona.avatarClass
+                                                ),
+                                                modifier = Modifier.size(70.dp)
+                                        )
+                                }
                         }
 
                         Spacer(Modifier.height(12.dp))
@@ -177,7 +187,7 @@ fun AvatarHeroSection(
                                                 .padding(horizontal = 12.dp, vertical = 4.dp)
                         ) {
                                 Text(
-                                        text = "WARRIOR",
+                                        text = persona.title.uppercase(),
                                         style = MaterialTheme.typography.labelLarge,
                                         color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.Bold,

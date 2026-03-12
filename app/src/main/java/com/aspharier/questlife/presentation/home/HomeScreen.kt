@@ -69,7 +69,8 @@ fun HomeScreen(navController: NavController) {
                                         level = profileState.level,
                                         totalXp = profileState.totalXp,
                                         progress = profileState.progressToNextLevel,
-                                        onAvatarClick = { navController.navigate(NavRoute.Equipment.route) }
+                                        persona = profileState.persona,
+                                        onAvatarClick = { navController.navigate(NavRoute.Roadmap.route) }
                                 )
                         }
 

@@ -22,20 +22,22 @@ import com.questlife.app.R
 // Custom Typography
 
 val Inter =
-        FontFamily(Font(R.font.inter_regular), Font(R.font.inter_medium), Font(R.font.inter_bold))
-
-val Pixel = FontFamily(Font(R.font.pixelify_sans))
+        FontFamily(
+            Font(R.font.inter_regular, FontWeight.Normal),
+            Font(R.font.inter_medium, FontWeight.Medium),
+            Font(R.font.inter_bold, FontWeight.Bold)
+        )
 
 val QuestLifeTypography =
         Typography(
                 displayLarge =
-                        TextStyle(fontFamily = Pixel, fontSize = 36.sp, letterSpacing = 1.5.sp),
+                        TextStyle(fontFamily = Inter, fontWeight = FontWeight.Bold, fontSize = 36.sp, letterSpacing = (-0.5).sp),
                 headlineLarge =
-                        TextStyle(fontFamily = Pixel, fontSize = 28.sp, letterSpacing = 1.sp),
+                        TextStyle(fontFamily = Inter, fontWeight = FontWeight.Bold, fontSize = 30.sp, letterSpacing = 0.sp),
                 headlineMedium =
-                        TextStyle(fontFamily = Pixel, fontSize = 22.sp, letterSpacing = 0.8.sp),
+                        TextStyle(fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 24.sp, letterSpacing = 0.sp),
                 headlineSmall =
-                        TextStyle(fontFamily = Pixel, fontSize = 18.sp, letterSpacing = 0.5.sp),
+                        TextStyle(fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 20.sp, letterSpacing = 0.sp),
                 titleLarge =
                         TextStyle(
                                 fontFamily = Inter,
@@ -46,16 +48,16 @@ val QuestLifeTypography =
                         TextStyle(
                                 fontFamily = Inter,
                                 fontWeight = FontWeight.SemiBold,
-                                fontSize = 15.sp
+                                fontSize = 16.sp
                         ),
                 titleSmall =
                         TextStyle(
                                 fontFamily = Inter,
                                 fontWeight = FontWeight.Medium,
-                                fontSize = 13.sp
+                                fontSize = 14.sp
                         ),
-                bodyLarge = TextStyle(fontFamily = Inter, fontSize = 14.sp),
-                bodyMedium = TextStyle(fontFamily = Inter, fontSize = 13.sp),
+                bodyLarge = TextStyle(fontFamily = Inter, fontSize = 16.sp),
+                bodyMedium = TextStyle(fontFamily = Inter, fontSize = 14.sp),
                 bodySmall = TextStyle(fontFamily = Inter, fontSize = 12.sp),
                 labelLarge =
                         TextStyle(

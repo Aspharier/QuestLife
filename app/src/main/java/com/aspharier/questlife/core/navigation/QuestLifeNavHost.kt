@@ -68,6 +68,11 @@ fun QuestLifeNavHost() {
             composable(NavRoute.World.route) { WorldScreen() }
             composable(NavRoute.Settings.route) { SettingsScreen(navController = navController) }
             composable(NavRoute.Equipment.route) { EquipmentScreen() }
+            composable(NavRoute.Roadmap.route) { 
+                com.aspharier.questlife.presentation.roadmap.RoadmapScreen(
+                    onBack = { navController.popBackStack() }
+                ) 
+            }
         }
     }
 }

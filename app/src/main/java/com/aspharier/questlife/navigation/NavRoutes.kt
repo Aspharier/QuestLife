@@ -9,4 +9,5 @@ sealed class NavRoute(val route: String) {
     object Skills : NavRoute("skills")
     object Settings : NavRoute("settings")
     object Equipment : NavRoute("equipment")
+    object Roadmap : NavRoute("roadmap")
 }
