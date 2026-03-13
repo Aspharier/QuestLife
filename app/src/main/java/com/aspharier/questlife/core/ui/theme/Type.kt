@@ -92,15 +92,19 @@ fun TextureOverlay(@DrawableRes texture: Int, alpha: Float, modifier: Modifier =
 
 @Composable
 fun QuestCard(
-        modifier: Modifier = Modifier,
-        onClick: () -> Unit = {},
-        content: @Composable BoxScope.() -> Unit
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    containerColor: androidx.compose.ui.graphics.Color? = null,
+    content: @Composable BoxScope.() -> Unit
 ) {
-        GlassCard(modifier = modifier.bounceClickable(onClick = onClick)) {
-                TextureOverlay(
-                        texture = R.drawable.tex_paper_noise,
-                        alpha = if (isSystemInDarkTheme()) 0.03f else 0.02f
-                )
+    GlassCard(
+        modifier = modifier.bounceClickable(onClick = onClick),
+        containerColor = containerColor
+    ) {
+        TextureOverlay(
+            texture = R.drawable.tex_paper_noise,
+            alpha = if (isSystemInDarkTheme()) 0.03f else 0.02f
+        )
 
                 this.content()
         }
