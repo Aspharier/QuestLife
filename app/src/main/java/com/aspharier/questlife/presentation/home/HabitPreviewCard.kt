@@ -45,7 +45,7 @@ fun HabitPreviewCard(
             Spacer(Modifier.height(12.dp))
 
             LinearProgressIndicator(
-                progress = 0.8f,
+                progress = { 0.8f },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp)

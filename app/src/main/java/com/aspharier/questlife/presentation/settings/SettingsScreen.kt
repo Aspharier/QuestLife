@@ -40,9 +40,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.aspharier.questlife.navigation.NavRoute
 import com.aspharier.questlife.core.ui.components.GamePanel
-import com.aspharier.questlife.core.ui.components.GamePanel
 import com.aspharier.questlife.core.ui.components.GameSectionHeader
-import com.aspharier.questlife.core.ui.theme.LocalGameColors
+import com.aspharier.questlife.presentation.screens.GameScreenBackground
 
 @Composable
 fun SettingsScreen(
@@ -52,8 +51,8 @@ fun SettingsScreen(
     val darkModeEnabled by viewModel.darkModeEnabled.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
     val context = LocalContext.current
-    val gameColors = LocalGameColors.current
 
+    GameScreenBackground {
     LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 96.dp)) {
         item {
             GameSectionHeader(
@@ -157,6 +156,7 @@ fun SettingsScreen(
                 }
             }
         }
+        }
     }
 }
 
@@ -223,7 +223,6 @@ private fun GameSettingsToggle(
         checked: Boolean,
         onCheckedChange: (Boolean) -> Unit
 ) {
-    val gameColors = LocalGameColors.current
     Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically

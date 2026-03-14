@@ -31,6 +31,7 @@ import com.aspharier.questlife.core.ui.components.GameSectionHeader
 import com.aspharier.questlife.core.ui.components.StatBar
 import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import com.aspharier.questlife.domain.model.Quest
+import com.aspharier.questlife.presentation.screens.GameScreenBackground
 
 @Composable
 fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
@@ -39,6 +40,7 @@ fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
         val tabs = listOf("Daily" to "📋", "Weekly" to "📅", "Achievements" to "🏆")
         val gameColors = LocalGameColors.current
 
+        GameScreenBackground {
         Column(modifier = Modifier.fillMaxSize()) {
                 GameSectionHeader(
                         title = "Quests",
@@ -181,137 +183,4 @@ fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
                 }
         }
 }
-
-@Composable
-fun QuestCard(quest: Quest) {
-        val gameColors = LocalGameColors.current
-        val progress =
-                if (quest.conditionTarget > 0)
-                        (quest.progressCurrent.toFloat() / quest.conditionTarget).coerceIn(0f, 1f)
-                else 1f
-
-        GamePanel(
-                modifier = Modifier.fillMaxWidth().bounceClickable {},
-                borderColor =
-                        if (quest.isCompleted) gameColors.completedGreen.copy(alpha = 0.3f)
-                        else gameColors.panelBorder,
-                glowColor =
-                        if (quest.isCompleted) gameColors.completedGreen.copy(alpha = 0.05f)
-                        else gameColors.panelBorderGlow
-        ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                        Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                        ) {
-                                // Title + badge
-                                Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.weight(1f, fill = false)
-                                ) {
-                                        Text(
-                                                text = quest.title,
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color =
-                                                        if (quest.isCompleted)
-                                                                MaterialTheme.colorScheme.onSurface
-                                                                        .copy(alpha = 0.6f)
-                                                        else MaterialTheme.colorScheme.onSurface
-                                        )
-                                        quest.rewardBadge?.let { badge ->
-                                                Spacer(Modifier.width(6.dp))
-                                                Text(text = badge, fontSize = 14.sp)
-                                        }
-                                }
-
-                                // Status chip
-                                if (quest.isCompleted) {
-                                        Box(
-                                                modifier =
-                                                        Modifier.clip(RoundedCornerShape(8.dp))
-                                                                .background(
-                                                                        gameColors.completedGreen
-                                                                                .copy(alpha = 0.15f)
-                                                                )
-                                                                .padding(
-                                                                        horizontal = 10.dp,
-                                                                        vertical = 4.dp
-                                                                )
-                                        ) {
-                                                Text(
-                                                        text = "✓ Done",
-                                                        fontSize = 11.sp,
-                                                        color = gameColors.completedGreen,
-                                                        fontWeight = FontWeight.Bold
-                                                )
-                                        }
-                                } else {
-                                        Box(
-                                                modifier =
-                                                        Modifier.clip(RoundedCornerShape(8.dp))
-                                                                .background(
-                                                                        MaterialTheme.colorScheme
-                                                                                .primary.copy(
-                                                                                alpha = 0.12f
-                                                                        )
-                                                                )
-                                                                .padding(
-                                                                        horizontal = 10.dp,
-                                                                        vertical = 4.dp
-                                                                )
-                                        ) {
-                                                Text(
-                                                        text = "+${quest.rewardXp} XP",
-                                                        fontSize = 11.sp,
-                                                        color = MaterialTheme.colorScheme.primary,
-                                                        fontWeight = FontWeight.Bold
-                                                )
-                                        }
-                                }
-                        }
-
-                        Spacer(Modifier.height(4.dp))
-
-                        Text(
-                                text = quest.description,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-
-                        Spacer(Modifier.height(10.dp))
-
-                        // Progress bar
-                        Column {
-                                Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                        Text(
-                                                text = "Progress",
-                                                style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                        Text(
-                                                text =
-                                                        "${quest.progressCurrent} / ${quest.conditionTarget}",
-                                                style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                }
-                                Spacer(Modifier.height(4.dp))
-                                StatBar(
-                                        progress = progress,
-                                        barColor =
-                                                if (quest.isCompleted) gameColors.completedGreen
-                                                else MaterialTheme.colorScheme.primary,
-                                        barColorEnd =
-                                                if (quest.isCompleted) gameColors.completedGreen
-                                                else MaterialTheme.colorScheme.tertiary,
-                                        height = 8.dp
-                                )
-                        }
-                }
-        }
 }

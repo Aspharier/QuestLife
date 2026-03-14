@@ -68,7 +68,7 @@ fun CreateHabitSheet(onCreate: (HabitsEvent.CreateHabit) -> Unit, onDismiss: () 
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(scrollState)
-            .padding(bottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding() + 24.dp)
+            .padding(bottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding() + 48.dp)
     ) {
         FadeInEntrance(index = 0) {
             GameSectionHeader(
@@ -95,8 +95,8 @@ fun CreateHabitSheet(onCreate: (HabitsEvent.CreateHabit) -> Unit, onDismiss: () 
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = gameColors.panelBorder,
                         cursorColor = MaterialTheme.colorScheme.primary,
-                        unfocusedContainerColor = gameColors.panelBackground.copy(alpha = 0.5f),
-                        focusedContainerColor = gameColors.panelBackground.copy(alpha = 0.8f)
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
                     )
                 )
             }
@@ -116,8 +116,8 @@ fun CreateHabitSheet(onCreate: (HabitsEvent.CreateHabit) -> Unit, onDismiss: () 
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = gameColors.panelBorder,
                         cursorColor = MaterialTheme.colorScheme.primary,
-                        unfocusedContainerColor = gameColors.panelBackground.copy(alpha = 0.5f),
-                        focusedContainerColor = gameColors.panelBackground.copy(alpha = 0.8f)
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
                     )
                 )
             }
@@ -332,7 +332,7 @@ private fun GameChipButton(
             )
             .background(
                 if (selected) color.copy(alpha = 0.15f)
-                else gameColors.panelBackground.copy(alpha = 0.3f)
+                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
             )
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 10.dp),
@@ -408,10 +408,14 @@ private fun difficultyEmoji(difficulty: HabitDifficulty) = when (difficulty) {
     HabitDifficulty.EASY -> "🌱"
     HabitDifficulty.MEDIUM -> "⚡"
     HabitDifficulty.HARD -> "🔥"
+    HabitDifficulty.VERY_HARD -> "💀"
+    HabitDifficulty.EXTREME -> "👑"
 }
 
 private fun difficultyColor(difficulty: HabitDifficulty) = when (difficulty) {
     HabitDifficulty.EASY -> Color(0xFF22C55E)
     HabitDifficulty.MEDIUM -> Color(0xFFFBBF24)
     HabitDifficulty.HARD -> Color(0xFFEF4444)
+    HabitDifficulty.VERY_HARD -> Color(0xFF8B5CF6)
+    HabitDifficulty.EXTREME -> Color(0xFFFFD700)
 }

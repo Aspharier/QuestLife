@@ -24,6 +24,8 @@ import com.aspharier.questlife.core.ui.components.StatBar
 import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import com.aspharier.questlife.presentation.avatar.AvatarRenderer
 import com.aspharier.questlife.presentation.avatar.AvatarState
+import com.aspharier.questlife.presentation.companion.AnimatedCompanion
+import com.aspharier.questlife.presentation.companion.CompanionType
 
 @Composable
 fun AvatarHeroSection(
@@ -31,6 +33,7 @@ fun AvatarHeroSection(
     totalXp: Int,
     progress: Float,
     persona: com.aspharier.questlife.domain.model.Persona,
+    companionType: CompanionType = CompanionType.WOLF,
     onAvatarClick: () -> Unit
 ) {
         val gameColors = LocalGameColors.current
@@ -93,83 +96,100 @@ fun AvatarHeroSection(
                                         label = "ringGlow"
                                 )
 
-                        Box(
-                                modifier =
-                                        Modifier.size(120.dp).graphicsLayer {
-                                                translationY = floatOffset.dp.toPx()
-                                        },
-                                contentAlignment = Alignment.Center
+                        // Avatar and Companion Row
+                        Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.Bottom
                         ) {
-                                // Outer glow ring
+                                // Companion on the left
+                                AnimatedCompanion(
+                                        companionType = companionType,
+                                        modifier = Modifier
+                                                .size(60.dp)
+                                                .offset(y = 20.dp)
+                                )
+
+                                Spacer(modifier = Modifier.width(16.dp))
+
                                 Box(
                                         modifier =
-                                                Modifier.size(120.dp)
-                                                        .clip(CircleShape)
-                                                        .border(
-                                                                width = 2.dp,
-                                                                brush =
+                                                Modifier.size(120.dp).graphicsLayer {
+                                                        translationY = floatOffset.dp.toPx()
+                                                },
+                                        contentAlignment = Alignment.Center
+                                ) {
+                                        // Outer glow ring
+                                        Box(
+                                                modifier =
+                                                        Modifier.size(120.dp)
+                                                                .clip(CircleShape)
+                                                                .border(
+                                                                        width = 2.dp,
+                                                                        brush =
+                                                                                Brush.radialGradient(
+                                                                                        colors =
+                                                                                                listOf(
+                                                                                                        MaterialTheme
+                                                                                                                .colorScheme
+                                                                                                                .primary
+                                                                                                                .copy(
+                                                                                                                        alpha =
+                                                                                                                                ringGlow
+                                                                                                                ),
+                                                                                                        MaterialTheme
+                                                                                                                .colorScheme
+                                                                                                                .primary
+                                                                                                                .copy(
+                                                                                                                        alpha =
+                                                                                                                                0.05f
+                                                                                                                )
+                                                                                        )
+                                                                                ),
+                                                                        shape = CircleShape
+                                                                )
+                                        )
+
+                                        // Avatar circle
+                                        Box(
+                                                modifier =
+                                                        Modifier.size(100.dp)
+                                                                .shadow(
+                                                                        12.dp,
+                                                                        CircleShape,
+                                                                        spotColor =
+                                                                                MaterialTheme.colorScheme
+                                                                                        .primary.copy(
+                                                                                        alpha = 0.5f
+                                                                        )
+                                                                )
+                                                                .clip(CircleShape)
+                                                                .background(
                                                                         Brush.radialGradient(
                                                                                 colors =
                                                                                         listOf(
                                                                                                 MaterialTheme
                                                                                                         .colorScheme
-                                                                                                        .primary
-                                                                                                        .copy(
-                                                                                                                alpha =
-                                                                                                                        ringGlow
-                                                                                                        ),
+                                                                                                        .primaryContainer,
                                                                                                 MaterialTheme
                                                                                                         .colorScheme
                                                                                                         .primary
                                                                                                         .copy(
                                                                                                                 alpha =
-                                                                                                                        0.05f
+                                                                                                                        0.3f
                                                                                                         )
                                                                                         )
-                                                                        ),
-                                                                shape = CircleShape
-                                                        )
-                                )
-
-                                // Avatar circle
-                                Box(
-                                        modifier =
-                                                Modifier.size(100.dp)
-                                                        .shadow(
-                                                                12.dp,
-                                                                CircleShape,
-                                                                spotColor =
-                                                                        MaterialTheme.colorScheme
-                                                                                .primary.copy(
-                                                                                alpha = 0.5f
                                                                         )
-                                                        )
-                                                        .clip(CircleShape)
-                                                        .background(
-                                                                Brush.radialGradient(
-                                                                        colors =
-                                                                                listOf(
-                                                                                        MaterialTheme
-                                                                                                .colorScheme
-                                                                                                .primaryContainer,
-                                                                                        MaterialTheme
-                                                                                                .colorScheme
-                                                                                                .primary
-                                                                                                .copy(
-                                                                                                        alpha =
-                                                                                                                0.3f
-                                                                                                )
-                                                                                )
-                                                                )
+                                                                ),
+                                                contentAlignment = Alignment.Center
+                                        ) {
+                                                AvatarRenderer(
+                                                        state = AvatarState(
+                                                                avatarClass = persona.avatarClass
                                                         ),
-                                        contentAlignment = Alignment.Center
-                                ) {
-                                        AvatarRenderer(
-                                                state = AvatarState(
-                                                        avatarClass = persona.avatarClass
-                                                ),
-                                                modifier = Modifier.size(70.dp)
-                                        )
+                                                        modifier = Modifier.size(70.dp)
+                                                )
+                                        }
                                 }
                         }
 

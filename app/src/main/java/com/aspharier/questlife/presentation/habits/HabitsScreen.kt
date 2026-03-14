@@ -34,6 +34,7 @@ import com.aspharier.questlife.core.ui.animations.bounceClickable
 import com.aspharier.questlife.core.ui.components.GameSectionHeader
 import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import com.aspharier.questlife.domain.model.HabitWithStreak
+import com.aspharier.questlife.presentation.screens.GameScreenBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,11 +44,12 @@ fun HabitsScreen(viewModel: HabitsViewModel = hiltViewModel()) {
     var showSheet by remember { mutableStateOf(false) }
     val gameColors = LocalGameColors.current
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        when {
-            uiState.isLoading -> LoadingState()
-            uiState.error != null -> ErrorState(message = uiState.error!!)
-            uiState.habits.isEmpty() -> EmptyState()
+    GameScreenBackground {
+        Box(modifier = Modifier.fillMaxSize()) {
+            when {
+                uiState.isLoading -> LoadingState()
+                uiState.error != null -> ErrorState(message = uiState.error!!)
+                uiState.habits.isEmpty() -> EmptyState()
             else -> {
                 HabitList(
                         habits = uiState.habits,
@@ -103,6 +105,7 @@ fun HabitsScreen(viewModel: HabitsViewModel = hiltViewModel()) {
                         onDismiss = { showSheet = false }
                 )
             }
+        }
         }
     }
 }
