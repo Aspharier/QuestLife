@@ -44,7 +44,7 @@ import com.aspharier.questlife.presentation.quests.QuestCard
 import com.aspharier.questlife.presentation.quests.QuestsViewModel
 import com.aspharier.questlife.domain.model.Quest
 import com.aspharier.questlife.presentation.rewards.ComboIndicator
-import com.aspharier.questlife.presentation.rewards.DailyRewardWheel
+
 import com.aspharier.questlife.domain.model.Achievement
 import kotlinx.coroutines.delay
 
@@ -61,7 +61,7 @@ fun HomeScreen(navController: NavController) {
         val questsState by questsViewModel.uiState.collectAsStateWithLifecycle()
 
         var showSheet by remember { mutableStateOf(false) }
-        var showDailyWheel by remember { mutableStateOf(false) }
+
         var aiMessage by remember { mutableStateOf(AIMotivationSystem.getTimeBasedMessage()) }
         var comboCount by remember { mutableIntStateOf(0) }
         var comboTimeRemaining by remember { mutableLongStateOf(0L) }
@@ -240,22 +240,6 @@ fun HomeScreen(navController: NavController) {
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                        // Mini buttons row
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                                // Daily Rewards FAB
-                                SmallActionFab(
-                                        icon = "🎰",
-                                        gradientColors = listOf(Color(0xFFFFD700), Color(0xFFFFA500)),
-                                        onClick = { showDailyWheel = true }
-                                )
-
-                                // Quick Stats FAB
-                                SmallActionFab(
-                                        icon = "📊",
-                                        gradientColors = listOf(Color(0xFF8B5CF6), Color(0xFF6366F1)),
-                                        onClick = { /* Navigate to stats */ }
-                                )
-                        }
 
                         // Main Create Quest FAB
                         Box(
@@ -295,28 +279,32 @@ fun HomeScreen(navController: NavController) {
                 }
 
                 if (showSheet) {
-                        ModalBottomSheet(
+                        androidx.compose.ui.window.Dialog(
                                 onDismissRequest = { showSheet = false },
-                                containerColor = MaterialTheme.colorScheme.surface
-                        ) {
-                                CreateHabitSheet(
-                                        onCreate = { event ->
-                                                habitsViewModel.onEvent(event)
-                                                showSheet = false
-                                        },
-                                        onDismiss = { showSheet = false }
+                                properties = androidx.compose.ui.window.DialogProperties(
+                                        usePlatformDefaultWidth = false
                                 )
+                        ) {
+                                Card(
+                                        modifier = Modifier
+                                                .fillMaxWidth(0.95f)
+                                                .padding(vertical = 24.dp, horizontal = 16.dp),
+                                        shape = RoundedCornerShape(24.dp),
+                                        colors = CardDefaults.cardColors(
+                                                containerColor = MaterialTheme.colorScheme.surface
+                                        ),
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                                ) {
+                                        CreateHabitSheet(
+                                                onCreate = { event ->
+                                                        habitsViewModel.onEvent(event)
+                                                        showSheet = false
+                                                },
+                                                onDismiss = { showSheet = false }
+                                        )
+                                }
                         }
                 }
-
-                // Daily Reward Wheel
-                DailyRewardWheel(
-                        isVisible = showDailyWheel,
-                        onRewardClaimed = { reward ->
-                                // Handle reward
-                        },
-                        onDismiss = { showDailyWheel = false }
-                )
 
                 // Achievement unlock animations
                 if (achievementsToShow.isNotEmpty()) {
@@ -407,7 +395,7 @@ fun AIMessageBanner(
         Card(
                 modifier = modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = glowAlpha)
                 ),
                 shape = RoundedCornerShape(16.dp)
         ) {

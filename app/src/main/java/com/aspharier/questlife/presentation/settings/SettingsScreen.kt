@@ -1,6 +1,8 @@
 package com.aspharier.questlife.presentation.settings
 
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -91,13 +94,27 @@ fun SettingsScreen(
         item { SettingsSectionLabel("🎨 Appearance") }
         item {
             GameSettingsPanel {
-                GameSettingsToggle(
-                        icon = Icons.Filled.DarkMode,
-                        title = "Dark Mode",
-                        subtitle = "Toggle dark / light theme",
-                        checked = darkModeEnabled,
-                        onCheckedChange = { viewModel.setDarkModeEnabled(it) }
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+                ) {
+                    androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                        GameSettingsThemeButton(
+                            title = "Deep Dark",
+                            icon = Icons.Filled.DarkMode,
+                            selected = true == darkModeEnabled,
+                            onClick = { viewModel.setDarkModeEnabled(true) }
+                        )
+                    }
+                    androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                        GameSettingsThemeButton(
+                            title = "Mystic Purple",
+                            icon = Icons.Filled.Star,
+                            selected = false == darkModeEnabled,
+                            onClick = { viewModel.setDarkModeEnabled(false) }
+                        )
+                    }
+                }
             }
         }
 
@@ -255,5 +272,51 @@ private fun GameSettingsToggle(
                                 checkedThumbColor = MaterialTheme.colorScheme.onPrimary
                         )
         )
+    }
+}
+
+@Composable
+private fun GameSettingsThemeButton(
+    title: String,
+    icon: ImageVector,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val gameColors = com.aspharier.questlife.core.ui.theme.LocalGameColors.current
+    androidx.compose.foundation.layout.Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .border(
+                2.dp,
+                if (selected) MaterialTheme.colorScheme.primary else gameColors.panelBorder,
+                RoundedCornerShape(12.dp)
+            )
+            .background(
+                if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            )
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp, horizontal = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelMedium,
+                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }

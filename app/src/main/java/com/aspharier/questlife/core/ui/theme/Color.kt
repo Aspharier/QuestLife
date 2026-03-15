@@ -23,33 +23,33 @@ val epicPurple = Color(0xFF8B5CF6)
 val legendaryOrange = Color(0xFFF97316)
 val commonGray = Color(0xFF9E9E9E)
 
-// ── Light Theme Palette ────────────────────────────────────────────────────────
+// ── Purple Dark Theme Palette (Mystic RPG Fantasy) ──────────────────────────────
 
-val LightColorScheme =
-        lightColorScheme(
-                primary = Color(0xFF4F46E5), // Indigo 600
-                onPrimary = Color(0xFFFFFFFF),
-                primaryContainer = Color(0xFFE0E7FF),
-                onPrimaryContainer = Color(0xFF3730A3),
-                secondary = Color(0xFFDB2777), // Pink 600
-                onSecondary = Color(0xFFFFFFFF),
-                secondaryContainer = Color(0xFFFCE7F3),
-                onSecondaryContainer = Color(0xFF831843),
-                tertiary = Color(0xFF7C3AED), // Violet 600
-                onTertiary = Color(0xFFFFFFFF),
-                tertiaryContainer = Color(0xFFF5F3FF),
-                onTertiaryContainer = Color(0xFF4C1D95),
-                background = Color(0xFFF8F9FC), // Light gray-blue
-                onBackground = Color(0xFF1A1A2E),
-                surface = Color(0xFFFFFFFF),
-                onSurface = Color(0xFF1A1A2E),
-                surfaceVariant = Color(0xFFE8E6F3),
-                onSurfaceVariant = Color(0xFF374151),
-                outline = Color(0xFF9CA3AF),
-                error = Color(0xFFDC2626),
-                onError = Color(0xFFFFFFFF),
-                errorContainer = Color(0xFFFEE2E2),
-                onErrorContainer = Color(0xFF991B1B),
+val PurpleDarkColorScheme =
+        darkColorScheme(
+                primary = Color(0xFFC084FC), // Purple 400
+                onPrimary = Color(0xFF3B0764),
+                primaryContainer = Color(0xFF581C87),
+                onPrimaryContainer = Color(0xFFF3E8FF),
+                secondary = Color(0xFFF472B6), // Pink 400
+                onSecondary = Color(0xFF500724),
+                secondaryContainer = Color(0xFF831843),
+                onSecondaryContainer = Color(0xFFFCE7F3),
+                tertiary = Color(0xFF818CF8), // Indigo 400
+                onTertiary = Color(0xFF1E1B4B),
+                tertiaryContainer = Color(0xFF312E81),
+                onTertiaryContainer = Color(0xFFE0E7FF),
+                background = Color(0xFF130B1E), // Deep purple-black
+                onBackground = Color(0xFFE8E5F0),
+                surface = Color(0xFF1C122A), // Deep purple panel
+                onSurface = Color(0xFFE8E5F0),
+                surfaceVariant = Color(0xFF2E1E45),
+                onSurfaceVariant = Color(0xFFBCA6D9),
+                outline = Color(0xFF4C3A6B),
+                error = Color(0xFFF87171),
+                onError = Color(0xFF450A0A),
+                errorContainer = Color(0xFF7F1D1D),
+                onErrorContainer = Color(0xFFFEE2E2),
         )
 
 // ── Dark Theme Palette (Deep RPG Fantasy) ──────────────────────────────────────
@@ -110,31 +110,31 @@ data class GameColors(
         val completedGreen: Color,
 )
 
-val LightGameColors =
+val PurpleDarkGameColors =
         GameColors(
-                panelBackground = Color(0xFFFFFFFF),
-                panelBorder = Color(0xFFCBD5E1),
-                panelBorderGlow = Color(0x404F46E5),
-                healthBar = healthRed,
-                manaBar = manaBlue,
-                xpBar = Color(0xFFF59E0B),
-                xpBarSecondary = Color(0xFFFBBF24),
-                staminaBar = staminaGreen,
-                streakFlame = streakFlame,
-                rarityCommon = Color(0xFF6B7280),
-                rarityRare = rareBlue,
-                rarityEpic = epicPurple,
-                rarityLegendary = legendaryOrange,
-                accentGlow = Color(0x304F46E5),
-                fabGlow = Color(0xFF4F46E5),
-                navBarBackground = Color(0xFFF1F5F9),
-                navBarBorder = Color(0xFFE2E8F0),
-                navBarSelected = Color(0xFF4F46E5),
-                navBarUnselected = Color(0xFF64748B),
-                sectionDivider = Color(0x406366F1),
-                chipSelected = Color(0x304F46E5),
-                chipBorder = Color(0xFFCBD5E1),
-                completedGreen = Color(0xFF22C55E),
+                panelBackground = Color(0xFF1F1430),
+                panelBorder = Color(0xFF3C275A),
+                panelBorderGlow = Color(0x44C084FC),
+                healthBar = Color(0xFFFF4757),
+                manaBar = Color(0xFF5B9BF7),
+                xpBar = Color(0xFFFFD700),
+                xpBarSecondary = Color(0xFFFFA000),
+                staminaBar = Color(0xFF34D399),
+                streakFlame = Color(0xFFFF8C57),
+                rarityCommon = Color(0xFF9E9E9E),
+                rarityRare = Color(0xFF60A5FA),
+                rarityEpic = Color(0xFFA78BFA),
+                rarityLegendary = Color(0xFFFB923C),
+                accentGlow = Color(0x33C084FC),
+                fabGlow = Color(0xFFC084FC),
+                navBarBackground = Color(0xFF150C22),
+                navBarBorder = Color(0xFF2E1C45),
+                navBarSelected = Color(0xFFC084FC),
+                navBarUnselected = Color(0xFF7E60A8),
+                sectionDivider = Color(0x33C084FC),
+                chipSelected = Color(0x33C084FC),
+                chipBorder = Color(0xFF3C275A),
+                completedGreen = Color(0xFF34D399),
         )
 
 val DarkGameColors =

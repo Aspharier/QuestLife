@@ -68,7 +68,7 @@ fun CreateHabitSheet(onCreate: (HabitsEvent.CreateHabit) -> Unit, onDismiss: () 
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(scrollState)
-            .padding(bottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding() + 48.dp)
+            .padding(bottom = 24.dp)
     ) {
         FadeInEntrance(index = 0) {
             GameSectionHeader(
@@ -169,21 +169,19 @@ fun CreateHabitSheet(onCreate: (HabitsEvent.CreateHabit) -> Unit, onDismiss: () 
                         color = MaterialTheme.colorScheme.primary
                     )
                     Spacer(Modifier.height(12.dp))
-                    Row(
+                    FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         HabitDifficulty.entries.forEach { diff ->
                             val selected = difficulty == diff
-                            Box(modifier = Modifier.weight(1f)) {
-                                GameChipButton(
-                                    label = "${difficultyEmoji(diff)} ${diff.name.lowercase().replaceFirstChar { it.uppercase() }}",
-                                    selected = selected,
-                                    color = difficultyColor(diff),
-                                    onClick = { difficulty = diff },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
+                            GameChipButton(
+                                label = "${difficultyEmoji(diff)} ${diff.name.lowercase().replace("_", " ").replaceFirstChar { it.uppercase() }}",
+                                selected = selected,
+                                color = difficultyColor(diff),
+                                onClick = { difficulty = diff }
+                            )
                         }
                     }
                 }

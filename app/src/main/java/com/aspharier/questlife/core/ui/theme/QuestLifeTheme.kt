@@ -12,8 +12,8 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun QuestLifeTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-    val gameColors = if (darkTheme) DarkGameColors else LightGameColors
+    val colorScheme = if (darkTheme) DarkColorScheme else PurpleDarkColorScheme
+    val gameColors = if (darkTheme) DarkGameColors else PurpleDarkGameColors
     val view = LocalView.current
 
     if (!view.isInEditMode) {
@@ -23,8 +23,8 @@ fun QuestLifeTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
             window.navigationBarColor = android.graphics.Color.TRANSPARENT
             
             val insetsController = WindowCompat.getInsetsController(window, view)
-            insetsController.isAppearanceLightStatusBars = !darkTheme
-            insetsController.isAppearanceLightNavigationBars = !darkTheme
+            insetsController.isAppearanceLightStatusBars = false
+            insetsController.isAppearanceLightNavigationBars = false
         }
     }
 
