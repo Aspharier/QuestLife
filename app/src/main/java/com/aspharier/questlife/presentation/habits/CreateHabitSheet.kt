@@ -73,7 +73,6 @@ fun CreateHabitSheet(onCreate: (HabitsEvent.CreateHabit) -> Unit, onDismiss: () 
         FadeInEntrance(index = 0) {
             GameSectionHeader(
                 title = "New Quest",
-                icon = "⚔️",
                 modifier = Modifier.padding(top = 16.dp)
             )
         }

@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,6 +45,7 @@ import com.aspharier.questlife.presentation.quests.QuestCard
 import com.aspharier.questlife.presentation.quests.QuestsViewModel
 import com.aspharier.questlife.domain.model.Quest
 import com.aspharier.questlife.presentation.rewards.ComboIndicator
+import com.aspharier.questlife.presentation.settings.SettingsViewModel
 
 import com.aspharier.questlife.domain.model.Achievement
 import kotlinx.coroutines.delay
@@ -54,15 +56,16 @@ fun HomeScreen(navController: NavController) {
         val profileViewModel: ProfileViewModel = hiltViewModel()
         val habitsViewModel: HabitsViewModel = hiltViewModel()
         val questsViewModel: QuestsViewModel = hiltViewModel()
+        val settingsViewModel: SettingsViewModel = hiltViewModel()
 
         val profileState by profileViewModel.uiState.collectAsStateWithLifecycle()
         val habitsState by habitsViewModel.uiState.collectAsStateWithLifecycle()
         val completionState by habitsViewModel.completionState.collectAsStateWithLifecycle()
         val questsState by questsViewModel.uiState.collectAsStateWithLifecycle()
+        val hasSeenWelcome by settingsViewModel.hasSeenWelcome.collectAsStateWithLifecycle()
 
         var showSheet by remember { mutableStateOf(false) }
 
-        var aiMessage by remember { mutableStateOf(AIMotivationSystem.getTimeBasedMessage()) }
         var comboCount by remember { mutableIntStateOf(0) }
         var comboTimeRemaining by remember { mutableLongStateOf(0L) }
         var achievementsToShow by remember { mutableStateOf<List<Achievement>>(emptyList()) }
@@ -74,11 +77,7 @@ fun HomeScreen(navController: NavController) {
                 getCompanionForClass(profileState.persona.avatarClass.name)
         }
 
-        // AI message rotation
-        LaunchedEffect(habitsState.habits) {
-                delay(30000)
-                aiMessage = AIMotivationSystem.getTimeBasedMessage()
-        }
+
 
         Box(modifier = Modifier.fillMaxSize()) {
                 // Time-themed gradient background
@@ -109,17 +108,6 @@ fun HomeScreen(navController: NavController) {
                         item {
                                 Spacer(Modifier.height(8.dp))
 
-                                // AI Motivation Banner
-                                AnimatedVisibility(
-                                        visible = true,
-                                        enter = fadeIn(),
-                                        exit = fadeOut()
-                                ) {
-                                        AIMessageBanner(
-                                                message = aiMessage,
-                                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                        )
-                                }
 
                                 // Companion + Avatar section
                                 AvatarHeroSection(
@@ -157,7 +145,7 @@ fun HomeScreen(navController: NavController) {
                         item {
                                 Spacer(Modifier.height(20.dp))
                                 if (questsState.dailyQuests.isNotEmpty()) {
-                                        GameSectionHeader(title = "Daily Quests", icon = "📜", textColor = Color.White)
+                                        GameSectionHeader(title = "Daily Quests", textColor = Color.White)
                                         Spacer(Modifier.height(8.dp))
                                         questsState.dailyQuests.forEachIndexed { index, quest ->
                                                 FadeInEntrance(index = index) {
@@ -173,7 +161,7 @@ fun HomeScreen(navController: NavController) {
                                         Spacer(Modifier.height(16.dp))
                                 }
 
-                                GameSectionHeader(title = "Today's Habits", icon = "⚔️", textColor = Color.White)
+                                GameSectionHeader(title = "Today's Habits", textColor = Color.White)
                         }
 
                         if (habitsState.habits.isEmpty() && !habitsState.isLoading) {
@@ -313,6 +301,13 @@ fun HomeScreen(navController: NavController) {
                                 onDismiss = { achievementsToShow = emptyList() }
                         )
                 }
+
+                // First-launch welcome popup
+                if (!hasSeenWelcome) {
+                        WelcomeDialog(
+                                onDismiss = { settingsViewModel.setHasSeenWelcome(true) }
+                        )
+                }
         }
 }
 
@@ -382,55 +377,150 @@ fun SmallActionFab(
 }
 
 @Composable
-fun AIMessageBanner(
-        message: com.aspharier.questlife.core.ai.AIMessage,
-        modifier: Modifier = Modifier
-) {
-        val infiniteTransition = rememberInfiniteTransition(label = "aiBanner")
-        val glowAlpha by infiniteTransition.animateFloat(0.3f, 0.6f, infiniteRepeatable(
-                animation = tween(2000, easing = FastOutSlowInEasing),
-                repeatMode = RepeatMode.Reverse
-        ), label = "glowAlpha")
+fun WelcomeDialog(onDismiss: () -> Unit) {
+        val aiMessage = remember { AIMotivationSystem.getTimeBasedMessage() }
 
-        Card(
-                modifier = modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = glowAlpha)
-                ),
-                shape = RoundedCornerShape(16.dp)
+        val infiniteTransition = rememberInfiniteTransition(label = "welcomeGlow")
+        val glowAlpha by infiniteTransition.animateFloat(
+                initialValue = 0.3f, targetValue = 0.7f,
+                animationSpec = infiniteRepeatable(
+                        animation = tween(2000, easing = FastOutSlowInEasing),
+                        repeatMode = RepeatMode.Reverse
+                ), label = "glowAlpha"
+        )
+
+        androidx.compose.ui.window.Dialog(
+                onDismissRequest = onDismiss,
+                properties = androidx.compose.ui.window.DialogProperties(
+                        usePlatformDefaultWidth = false
+                )
         ) {
-                Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                Card(
+                        modifier = Modifier
+                                .fillMaxWidth(0.9f)
+                                .shadow(
+                                        elevation = 24.dp,
+                                        shape = RoundedCornerShape(28.dp),
+                                        spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+                                ),
+                        shape = RoundedCornerShape(28.dp),
+                        colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp)
                 ) {
-                        val moodEmoji = when (message.mood) {
-                                com.aspharier.questlife.core.ai.AIMood.ENTHUSIASTIC -> "⚡"
-                                com.aspharier.questlife.core.ai.AIMood.CALM -> "🌙"
-                                com.aspharier.questlife.core.ai.AIMood.CHEERING -> "🎉"
-                                com.aspharier.questlife.core.ai.AIMood.FOCUSED -> "🎯"
-                                com.aspharier.questlife.core.ai.AIMood.MYSTERIOUS -> "✨"
-                                com.aspharier.questlife.core.ai.AIMood.PLAYFUL -> "🤪"
-                        }
+                        Column(
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(
+                                                Brush.verticalGradient(
+                                                        colors = listOf(
+                                                                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f),
+                                                                Color.Transparent
+                                                        )
+                                                )
+                                        )
+                                        .padding(28.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                                // Welcome icon
+                                Text(
+                                        text = "⚔️",
+                                        fontSize = 48.sp
+                                )
 
-                        Text(text = moodEmoji, fontSize = 24.sp)
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column(modifier = Modifier.weight(1f)) {
+                                Spacer(Modifier.height(16.dp))
+
+                                // Title
                                 Text(
-                                        text = "AI Companion",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold
+                                        text = "Welcome, Adventurer!",
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        textAlign = TextAlign.Center
                                 )
+
+                                Spacer(Modifier.height(8.dp))
+
                                 Text(
-                                        text = message.text,
+                                        text = "Your journey begins now",
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = Color.White.copy(alpha = 0.9f)
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.SemiBold
                                 )
-                                if (message.xpBonus > 0) {
+
+                                Spacer(Modifier.height(20.dp))
+
+                                // AI message card
+                                Card(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(
+                                                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = glowAlpha * 0.5f)
+                                        ),
+                                        shape = RoundedCornerShape(16.dp)
+                                ) {
+                                        Row(
+                                                modifier = Modifier.padding(14.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                val moodEmoji = when (aiMessage.mood) {
+                                                        com.aspharier.questlife.core.ai.AIMood.ENTHUSIASTIC -> "⚡"
+                                                        com.aspharier.questlife.core.ai.AIMood.CALM -> "🌙"
+                                                        com.aspharier.questlife.core.ai.AIMood.CHEERING -> "🎉"
+                                                        com.aspharier.questlife.core.ai.AIMood.FOCUSED -> "🎯"
+                                                        com.aspharier.questlife.core.ai.AIMood.MYSTERIOUS -> "✨"
+                                                        com.aspharier.questlife.core.ai.AIMood.PLAYFUL -> "🤪"
+                                                }
+
+                                                Text(text = moodEmoji, fontSize = 28.sp)
+                                                Spacer(modifier = Modifier.width(12.dp))
+                                                Column(modifier = Modifier.weight(1f)) {
+                                                        Text(
+                                                                text = "AI Companion",
+                                                                style = MaterialTheme.typography.labelSmall,
+                                                                color = MaterialTheme.colorScheme.primary,
+                                                                fontWeight = FontWeight.Bold
+                                                        )
+                                                        Spacer(Modifier.height(2.dp))
+                                                        Text(
+                                                                text = aiMessage.text,
+                                                                style = MaterialTheme.typography.bodyMedium,
+                                                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
+                                                        )
+                                                        if (aiMessage.xpBonus > 0) {
+                                                                Spacer(Modifier.height(4.dp))
+                                                                Text(
+                                                                        text = "+${aiMessage.xpBonus} XP bonus available!",
+                                                                        style = MaterialTheme.typography.labelSmall,
+                                                                        color = MaterialTheme.colorScheme.tertiary,
+                                                                        fontWeight = FontWeight.Bold
+                                                                )
+                                                        }
+                                                }
+                                        }
+                                }
+
+                                Spacer(Modifier.height(28.dp))
+
+                                // Dismiss button
+                                Button(
+                                        onClick = onDismiss,
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(52.dp),
+                                        shape = RoundedCornerShape(16.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.primary
+                                        ),
+                                        elevation = ButtonDefaults.buttonElevation(
+                                                defaultElevation = 8.dp
+                                        )
+                                ) {
                                         Text(
-                                                text = "+${message.xpBonus} XP bonus available!",
-                                                style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.tertiary
+                                                text = "Let's Go! ⚔️",
+                                                fontSize = 16.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                letterSpacing = 1.sp
                                         )
                                 }
                         }

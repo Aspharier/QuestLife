@@ -126,7 +126,6 @@ private fun HabitList(
         item {
             GameSectionHeader(
                     title = "Today's Habits",
-                    icon = "⚔️",
                     modifier = Modifier.padding(top = 12.dp)
             )
         }

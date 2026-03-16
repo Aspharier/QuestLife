@@ -60,7 +60,6 @@ fun SettingsScreen(
         item {
             GameSectionHeader(
                     title = "Settings",
-                    icon = "⚙️",
                     modifier = Modifier.padding(top = 12.dp)
             )
             Spacer(Modifier.height(8.dp))

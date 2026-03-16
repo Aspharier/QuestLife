@@ -44,7 +44,6 @@ fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
         Column(modifier = Modifier.fillMaxSize()) {
                 GameSectionHeader(
                         title = "Quests",
-                        icon = "📜",
                         modifier = Modifier.padding(top = 12.dp)
                 )
 
