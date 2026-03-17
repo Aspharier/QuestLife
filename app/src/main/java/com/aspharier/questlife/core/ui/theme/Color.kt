@@ -81,6 +81,35 @@ val DarkColorScheme =
                 onErrorContainer = Color(0xFFFEE2E2),
         )
 
+// ── Green Dark Theme Palette (Forest RPG Fantasy) ──────────────────────────────
+
+val GreenDarkColorScheme =
+        darkColorScheme(
+                primary = Color(0xFF4ADE80), // Green 400
+                onPrimary = Color(0xFF064E3B),
+                primaryContainer = Color(0xFF065F46),
+                onPrimaryContainer = Color(0xFFD1FAE5),
+                secondary = Color(0xFFFBBF24), // Amber 400
+                onSecondary = Color(0xFF78350F),
+                secondaryContainer = Color(0xFF92400E),
+                onSecondaryContainer = Color(0xFFFEF3C7),
+                tertiary = Color(0xFF6EE7B7), // Emerald 300
+                onTertiary = Color(0xFF022C22),
+                tertiaryContainer = Color(0xFF064E3B),
+                onTertiaryContainer = Color(0xFFA7F3D0),
+                background = Color(0xFF061510), // Deep forest-black
+                onBackground = Color(0xFFE2E8F0),
+                surface = Color(0xFF0B1F17), // Deep forest panel
+                onSurface = Color(0xFFE2E8F0),
+                surfaceVariant = Color(0xFF163228),
+                onSurfaceVariant = Color(0xFFA7F3D0),
+                outline = Color(0xFF28483B),
+                error = Color(0xFFF87171),
+                onError = Color(0xFF450A0A),
+                errorContainer = Color(0xFF7F1D1D),
+                onErrorContainer = Color(0xFFFEE2E2),
+        )
+
 // ── Extended Game Colors (via CompositionLocal) ────────────────────────────────
 
 @Immutable
@@ -161,6 +190,33 @@ val DarkGameColors =
                 sectionDivider = Color(0x33818CF8),
                 chipSelected = Color(0x33818CF8),
                 chipBorder = Color(0xFF2D3548),
+                completedGreen = Color(0xFF34D399),
+        )
+
+val GreenDarkGameColors =
+        GameColors(
+                panelBackground = Color(0xFF0E2219),
+                panelBorder = Color(0xFF244234),
+                panelBorderGlow = Color(0x444ADE80),
+                healthBar = Color(0xFFFF4757),
+                manaBar = Color(0xFF5B9BF7),
+                xpBar = Color(0xFFFFD700),
+                xpBarSecondary = Color(0xFFFFA000),
+                staminaBar = Color(0xFF34D399),
+                streakFlame = Color(0xFFFF8C57),
+                rarityCommon = Color(0xFF9E9E9E),
+                rarityRare = Color(0xFF60A5FA),
+                rarityEpic = Color(0xFFA78BFA),
+                rarityLegendary = Color(0xFFFB923C),
+                accentGlow = Color(0x334ADE80),
+                fabGlow = Color(0xFF4ADE80),
+                navBarBackground = Color(0xFF081812),
+                navBarBorder = Color(0xFF163228),
+                navBarSelected = Color(0xFF4ADE80),
+                navBarUnselected = Color(0xFF5A8A7A),
+                sectionDivider = Color(0x334ADE80),
+                chipSelected = Color(0x334ADE80),
+                chipBorder = Color(0xFF244234),
                 completedGreen = Color(0xFF34D399),
         )
 

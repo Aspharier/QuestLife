@@ -74,7 +74,8 @@ fun SkillsScreen() {
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                flingBehavior = androidx.compose.foundation.gestures.ScrollableDefaults.flingBehavior()
         ) { items(skills) { skill -> SkillNode(skill = skill) } }
     }
 }

@@ -22,11 +22,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            val isDarkMode by
-                    settingsRepository.darkModeEnabled.collectAsState(
-                            initial = isSystemInDarkTheme()
+            val themeType by
+                    settingsRepository.themeType.collectAsState(
+                            initial = com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK
                     )
-            QuestLifeTheme(darkTheme = isDarkMode) { QuestLifeNavHost() }
+            QuestLifeTheme(themeType = themeType) { QuestLifeNavHost() }
         }
     }
 }

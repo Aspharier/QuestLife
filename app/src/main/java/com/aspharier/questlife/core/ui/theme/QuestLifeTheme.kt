@@ -11,9 +11,17 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 @Composable
-fun QuestLifeTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colorScheme = if (darkTheme) DarkColorScheme else PurpleDarkColorScheme
-    val gameColors = if (darkTheme) DarkGameColors else PurpleDarkGameColors
+fun QuestLifeTheme(themeType: ThemeType = ThemeType.DEEP_DARK, content: @Composable () -> Unit) {
+    val colorScheme = when (themeType) {
+        ThemeType.DEEP_DARK -> DarkColorScheme
+        ThemeType.MYSTIC_PURPLE -> PurpleDarkColorScheme
+        ThemeType.DARK_GREEN -> GreenDarkColorScheme
+    }
+    val gameColors = when (themeType) {
+        ThemeType.DEEP_DARK -> DarkGameColors
+        ThemeType.MYSTIC_PURPLE -> PurpleDarkGameColors
+        ThemeType.DARK_GREEN -> GreenDarkGameColors
+    }
     val view = LocalView.current
 
     if (!view.isInEditMode) {

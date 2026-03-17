@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -51,12 +52,12 @@ fun SettingsScreen(
     navController: NavController,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val darkModeEnabled by viewModel.darkModeEnabled.collectAsState()
+    val themeType by viewModel.themeType.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
     val context = LocalContext.current
 
     GameScreenBackground {
-    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 96.dp)) {
+    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 96.dp), flingBehavior = androidx.compose.foundation.gestures.ScrollableDefaults.flingBehavior()) {
         item {
             GameSectionHeader(
                     title = "Settings",
@@ -101,16 +102,24 @@ fun SettingsScreen(
                         GameSettingsThemeButton(
                             title = "Deep Dark",
                             icon = Icons.Filled.DarkMode,
-                            selected = true == darkModeEnabled,
-                            onClick = { viewModel.setDarkModeEnabled(true) }
+                            selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK,
+                            onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK) }
                         )
                     }
                     androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
                         GameSettingsThemeButton(
-                            title = "Mystic Purple",
+                            title = "Purple",
                             icon = Icons.Filled.Star,
-                            selected = false == darkModeEnabled,
-                            onClick = { viewModel.setDarkModeEnabled(false) }
+                            selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE,
+                            onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE) }
+                        )
+                    }
+                    androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                        GameSettingsThemeButton(
+                            title = "Green",
+                            icon = Icons.Filled.CheckCircle,
+                            selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN,
+                            onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN) }
                         )
                     }
                 }

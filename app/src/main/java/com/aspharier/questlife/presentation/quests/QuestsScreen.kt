@@ -166,7 +166,8 @@ fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
                                                                 horizontal = 16.dp
                                                         ),
                                                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                                                modifier = Modifier.fillMaxSize()
+                                                modifier = Modifier.fillMaxSize(),
+                                                flingBehavior = androidx.compose.foundation.gestures.ScrollableDefaults.flingBehavior()
                                         ) {
                                                 itemsIndexed(
                                                         quests,

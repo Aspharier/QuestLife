@@ -101,9 +101,12 @@ fun HomeScreen(navController: NavController) {
                         particleCount = 25
                 )
 
+                val lazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
                 LazyColumn(
+                        state = lazyListState,
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 96.dp)
+                        contentPadding = PaddingValues(bottom = 96.dp),
+                        flingBehavior = androidx.compose.foundation.gestures.ScrollableDefaults.flingBehavior()
                 ) {
                         item {
                                 Spacer(Modifier.height(8.dp))
