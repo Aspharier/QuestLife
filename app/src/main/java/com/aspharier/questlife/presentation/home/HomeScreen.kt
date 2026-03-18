@@ -71,7 +71,6 @@ fun HomeScreen(navController: NavController) {
         var achievementsToShow by remember { mutableStateOf<List<Achievement>>(emptyList()) }
 
         val gameColors = LocalGameColors.current
-        val currentTheme = TimeThemeSystem.getCurrentTheme()
 
         val companionType = remember(profileState.persona.avatarClass) {
                 getCompanionForClass(profileState.persona.avatarClass.name)
@@ -80,24 +79,24 @@ fun HomeScreen(navController: NavController) {
 
 
         Box(modifier = Modifier.fillMaxSize()) {
-                // Time-themed gradient background
+                // Theme background gradient
                 Box(
                         modifier = Modifier
                                 .fillMaxSize()
                                 .background(
                                         Brush.verticalGradient(
-                                                colors = currentTheme.backgroundGradient
+                                                colors = gameColors.screenBackgroundGradient
                                         )
                                 )
                 )
 
                 // Ambient particles
                 GlowingBackground(
-                        primaryColor = currentTheme.primaryColor,
-                        secondaryColor = currentTheme.secondaryColor
+                        primaryColor = gameColors.glowPrimary,
+                        secondaryColor = gameColors.glowSecondary
                 )
                 AmbientParticles(
-                        colors = currentTheme.particleColors,
+                        colors = gameColors.particleColors,
                         particleCount = 25
                 )
 
@@ -180,7 +179,7 @@ fun HomeScreen(navController: NavController) {
                                 }
                         }
 
-                        items(habitsState.habits.take(5), key = { it.habit.id }) { habitWithStreak
+                        items(habitsState.habits, key = { it.habit.id }) { habitWithStreak
                                 ->
                                 val index = habitsState.habits.indexOf(habitWithStreak)
                                 FadeInEntrance(index = index + questsState.dailyQuests.size) {

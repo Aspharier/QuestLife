@@ -137,6 +137,10 @@ data class GameColors(
         val chipSelected: Color,
         val chipBorder: Color,
         val completedGreen: Color,
+        val screenBackgroundGradient: List<Color>,
+        val particleColors: List<Color>,
+        val glowPrimary: Color,
+        val glowSecondary: Color,
 )
 
 val PurpleDarkGameColors =
@@ -164,6 +168,19 @@ val PurpleDarkGameColors =
                 chipSelected = Color(0x33C084FC),
                 chipBorder = Color(0xFF3C275A),
                 completedGreen = Color(0xFF34D399),
+                screenBackgroundGradient = listOf(
+                        Color(0xFF130B1E),
+                        Color(0xFF1C122A),
+                        Color(0xFF2E1E45).copy(alpha = 0.5f),
+                        Color(0xFF581C87).copy(alpha = 0.2f)
+                ),
+                particleColors = listOf(
+                        Color(0xFFC084FC),
+                        Color(0xFFF472B6),
+                        Color(0xFF818CF8).copy(alpha = 0.5f)
+                ),
+                glowPrimary = Color(0xFFC084FC),
+                glowSecondary = Color(0xFFF472B6),
         )
 
 val DarkGameColors =
@@ -191,6 +208,19 @@ val DarkGameColors =
                 chipSelected = Color(0x33818CF8),
                 chipBorder = Color(0xFF2D3548),
                 completedGreen = Color(0xFF34D399),
+                screenBackgroundGradient = listOf(
+                        Color(0xFF0A0E1A),
+                        Color(0xFF121829),
+                        Color(0xFF1C2333).copy(alpha = 0.5f),
+                        Color(0xFF312E81).copy(alpha = 0.2f)
+                ),
+                particleColors = listOf(
+                        Color(0xFF818CF8),
+                        Color(0xFFF472B6),
+                        Color(0xFFA78BFA).copy(alpha = 0.5f)
+                ),
+                glowPrimary = Color(0xFF818CF8),
+                glowSecondary = Color(0xFFF472B6),
         )
 
 val GreenDarkGameColors =
@@ -218,6 +248,19 @@ val GreenDarkGameColors =
                 chipSelected = Color(0x334ADE80),
                 chipBorder = Color(0xFF244234),
                 completedGreen = Color(0xFF34D399),
+                screenBackgroundGradient = listOf(
+                        Color(0xFF061510),
+                        Color(0xFF0B1F17),
+                        Color(0xFF163228).copy(alpha = 0.5f),
+                        Color(0xFF065F46).copy(alpha = 0.2f)
+                ),
+                particleColors = listOf(
+                        Color(0xFF4ADE80),
+                        Color(0xFFFBBF24),
+                        Color(0xFF6EE7B7).copy(alpha = 0.5f)
+                ),
+                glowPrimary = Color(0xFF4ADE80),
+                glowSecondary = Color(0xFFFBBF24),
         )
 
 val LocalGameColors = staticCompositionLocalOf { DarkGameColors }
