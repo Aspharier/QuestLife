@@ -28,7 +28,8 @@ fun WorldScreen() {
         // Background texture
         TextureOverlay(
             texture = R.drawable.tex_stone_panel,
-            alpha = if (isSystemInDarkTheme()) 0.08f else 0.05f
+            alpha = if (isSystemInDarkTheme()) 0.08f else 0.05f,
+            modifier = Modifier.matchParentSize()
         )
 
         Column(

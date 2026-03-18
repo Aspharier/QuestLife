@@ -84,8 +84,8 @@ fun TextureOverlay(@DrawableRes texture: Int, alpha: Float, modifier: Modifier =
         Image(
                 painter = painterResource(texture),
                 contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                modifier = modifier,
                 alpha = alpha
         )
 }
@@ -103,7 +103,8 @@ fun QuestCard(
     ) {
         TextureOverlay(
             texture = R.drawable.tex_paper_noise,
-            alpha = if (isSystemInDarkTheme()) 0.03f else 0.02f
+            alpha = if (isSystemInDarkTheme()) 0.03f else 0.02f,
+            modifier = Modifier.matchParentSize()
         )
 
                 this.content()
