@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +41,35 @@ fun AvatarHeroSection(
     companionType: CompanionType = CompanionType.WOLF,
     onAvatarClick: () -> Unit
 ) {
+    var targetLevel by remember { mutableIntStateOf(1) }
+    var targetXp by remember { mutableIntStateOf(0) }
+    var targetProgress by remember { mutableFloatStateOf(0f) }
+
+    LaunchedEffect(level, totalXp, progress) {
+        delay(600) // slight delay on open
+        targetLevel = level
+        targetXp = totalXp
+        targetProgress = progress
+    }
+
+    val displayedLevel by animateIntAsState(
+        targetValue = targetLevel,
+        animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
+        label = "levelAnim"
+    )
+
+    val displayedXp by animateIntAsState(
+        targetValue = targetXp,
+        animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
+        label = "xpAnim"
+    )
+
+    val displayedProgress by animateFloatAsState(
+        targetValue = targetProgress,
+        animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
+        label = "progressAnim"
+    )
+
     val gameColors = LocalGameColors.current
     val primaryColor = MaterialTheme.colorScheme.primary
     val companionColor = Color(companionType.primaryColor)
@@ -261,7 +291,7 @@ fun AvatarHeroSection(
             Spacer(Modifier.height(6.dp))
 
             Text(
-                text = "Level $level",
+                text = "Level $displayedLevel",
                 style = MaterialTheme.typography.headlineLarge,
             )
 
@@ -273,7 +303,7 @@ fun AvatarHeroSection(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 StatBar(
-                    progress = progress,
+                    progress = displayedProgress,
                     barColor = gameColors.xpBar,
                     barColorEnd = gameColors.xpBarSecondary,
                     height = 14.dp
@@ -282,7 +312,7 @@ fun AvatarHeroSection(
                 Spacer(Modifier.height(6.dp))
 
                 Text(
-                    text = "$totalXp XP",
+                    text = "$displayedXp XP",
                     style = MaterialTheme.typography.labelLarge,
                     color = gameColors.xpBar,
                     fontWeight = FontWeight.SemiBold

@@ -7,7 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -35,10 +35,7 @@ import com.aspharier.questlife.presentation.achievements.AchievementUnlockAnimat
 import com.aspharier.questlife.presentation.companion.AnimatedCompanion
 import com.aspharier.questlife.presentation.companion.CompanionType
 import com.aspharier.questlife.presentation.companion.getCompanionForClass
-import com.aspharier.questlife.presentation.habits.AnimatedHabitCard
-import com.aspharier.questlife.presentation.habits.CreateHabitSheet
-import com.aspharier.questlife.presentation.habits.HabitsEvent
-import com.aspharier.questlife.presentation.habits.HabitsViewModel
+
 import com.aspharier.questlife.presentation.profile.LevelUpAnimation
 import com.aspharier.questlife.presentation.profile.ProfileViewModel
 import com.aspharier.questlife.presentation.quests.QuestCard
@@ -54,17 +51,16 @@ import kotlinx.coroutines.delay
 @Composable
 fun HomeScreen(navController: NavController) {
         val profileViewModel: ProfileViewModel = hiltViewModel()
-        val habitsViewModel: HabitsViewModel = hiltViewModel()
+
         val questsViewModel: QuestsViewModel = hiltViewModel()
         val settingsViewModel: SettingsViewModel = hiltViewModel()
 
         val profileState by profileViewModel.uiState.collectAsStateWithLifecycle()
-        val habitsState by habitsViewModel.uiState.collectAsStateWithLifecycle()
-        val completionState by habitsViewModel.completionState.collectAsStateWithLifecycle()
+
         val questsState by questsViewModel.uiState.collectAsStateWithLifecycle()
         val hasSeenWelcome by settingsViewModel.hasSeenWelcome.collectAsStateWithLifecycle()
 
-        var showSheet by remember { mutableStateOf(false) }
+
 
         var comboCount by remember { mutableIntStateOf(0) }
         var comboTimeRemaining by remember { mutableLongStateOf(0L) }
@@ -163,137 +159,12 @@ fun HomeScreen(navController: NavController) {
                                         Spacer(Modifier.height(16.dp))
                                 }
 
-                                GameSectionHeader(title = "Today's Habits", textColor = Color.White)
-                        }
-
-                        if (habitsState.habits.isEmpty() && !habitsState.isLoading) {
-                                item {
-                                        Spacer(Modifier.height(24.dp))
-                                        Text(
-                                                text =
-                                                        "No habits for today.\nTap ⚔️ to create your first quest!",
-                                                style = MaterialTheme.typography.bodyLarge,
-                                                color = Color.White.copy(alpha = 0.8f),
-                                                modifier = Modifier.padding(horizontal = 16.dp)
-                                        )
-                                }
-                        }
-
-                        items(habitsState.habits, key = { it.habit.id }) { habitWithStreak
-                                ->
-                                val index = habitsState.habits.indexOf(habitWithStreak)
-                                FadeInEntrance(index = index + questsState.dailyQuests.size) {
-                                        Spacer(Modifier.height(8.dp))
-                                        AnimatedHabitCard(
-                                                habitName = habitWithStreak.habit.name,
-                                                meta =
-                                                        "${habitWithStreak.habit.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }} · ${habitWithStreak.habit.category.name.lowercase().replaceFirstChar { it.uppercase() }}",
-                                                isCompleted =
-                                                        completionState.completedHabitId ==
-                                                                habitWithStreak.habit.id,
-                                                isCompletedToday = habitWithStreak.isCompletedToday,
-                                                streak = habitWithStreak.currentStreak,
-                                                xpGained =
-                                                        if (completionState.completedHabitId ==
-                                                                        habitWithStreak.habit.id
-                                                        )
-                                                                completionState.xpGained
-                                                        else null,
-                                                onAnimationEnd = {
-                                                        habitsViewModel.clearCompletionState()
-                                                },
-                                                onClick = {
-                                                        if (!habitWithStreak.isCompletedToday)
-                                                                habitsViewModel.onEvent(
-                                                                        HabitsEvent.CompleteHabit(
-                                                                                habitWithStreak
-                                                                                        .habit
-                                                                        )
-                                                                )
-                                                },
-                                                onLongPress = {}
-                                        )
-                                }
                         }
                 }
 
                 // Level-up overlay
                 if (profileState.levelUp) {
                         LevelUpAnimation(level = profileState.level)
-                }
-
-                // Floating Action Buttons - positioned at bottom end
-                Column(
-                        modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp, bottom = 16.dp),
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-
-                        // Main Create Quest FAB
-                        Box(
-                                modifier = Modifier
-                                        .bounceClickable { showSheet = true }
-                                        .shadow(
-                                                elevation = 16.dp,
-                                                shape = RoundedCornerShape(28.dp),
-                                                spotColor = gameColors.fabGlow.copy(alpha = 0.6f)
-                                        )
-                                        .background(
-                                                Brush.horizontalGradient(
-                                                        colors = listOf(
-                                                                gameColors.fabGlow,
-                                                                gameColors.fabGlow.copy(alpha = 0.7f)
-                                                        )
-                                                ),
-                                                RoundedCornerShape(28.dp)
-                                        )
-                                        .padding(horizontal = 24.dp, vertical = 14.dp),
-                                contentAlignment = Alignment.Center
-                        ) {
-                                Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.Center
-                                ) {
-                                        Text("⚔️", fontSize = 20.sp)
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text(
-                                                "New Quest",
-                                                style = MaterialTheme.typography.titleSmall,
-                                                color = Color.White,
-                                                fontWeight = FontWeight.Bold
-                                        )
-                                }
-                        }
-                }
-
-                if (showSheet) {
-                        androidx.compose.ui.window.Dialog(
-                                onDismissRequest = { showSheet = false },
-                                properties = androidx.compose.ui.window.DialogProperties(
-                                        usePlatformDefaultWidth = false
-                                )
-                        ) {
-                                Card(
-                                        modifier = Modifier
-                                                .fillMaxWidth(0.95f)
-                                                .padding(vertical = 24.dp, horizontal = 16.dp),
-                                        shape = RoundedCornerShape(24.dp),
-                                        colors = CardDefaults.cardColors(
-                                                containerColor = MaterialTheme.colorScheme.surface
-                                        ),
-                                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                                ) {
-                                        CreateHabitSheet(
-                                                onCreate = { event ->
-                                                        habitsViewModel.onEvent(event)
-                                                        showSheet = false
-                                                },
-                                                onDismiss = { showSheet = false }
-                                        )
-                                }
-                        }
                 }
 
                 // Achievement unlock animations
