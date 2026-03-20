@@ -32,6 +32,8 @@ import com.aspharier.questlife.presentation.companion.CompanionType
 import kotlin.math.cos
 import kotlin.math.sin
 
+private var hasPlayedAvatarAnimation = false
+
 @Composable
 fun AvatarHeroSection(
     level: Int,
@@ -41,32 +43,39 @@ fun AvatarHeroSection(
     companionType: CompanionType = CompanionType.WOLF,
     onAvatarClick: () -> Unit
 ) {
-    var targetLevel by remember { mutableIntStateOf(1) }
-    var targetXp by remember { mutableIntStateOf(0) }
-    var targetProgress by remember { mutableFloatStateOf(0f) }
+    var targetLevel by remember { mutableIntStateOf(if (hasPlayedAvatarAnimation) level else 1) }
+    var targetXp by remember { mutableIntStateOf(if (hasPlayedAvatarAnimation) totalXp else 0) }
+    var targetProgress by remember { mutableFloatStateOf(if (hasPlayedAvatarAnimation) progress else 0f) }
 
     LaunchedEffect(level, totalXp, progress) {
-        delay(600) // slight delay on open
-        targetLevel = level
-        targetXp = totalXp
-        targetProgress = progress
+        if (!hasPlayedAvatarAnimation) {
+            delay(600) // slight delay on open
+            targetLevel = level
+            targetXp = totalXp
+            targetProgress = progress
+            hasPlayedAvatarAnimation = true
+        } else {
+            targetLevel = level
+            targetXp = totalXp
+            targetProgress = progress
+        }
     }
 
     val displayedLevel by animateIntAsState(
         targetValue = targetLevel,
-        animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
         label = "levelAnim"
     )
 
     val displayedXp by animateIntAsState(
         targetValue = targetXp,
-        animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
         label = "xpAnim"
     )
 
     val displayedProgress by animateFloatAsState(
         targetValue = targetProgress,
-        animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
         label = "progressAnim"
     )
 

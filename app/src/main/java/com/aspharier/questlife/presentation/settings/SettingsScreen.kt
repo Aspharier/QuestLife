@@ -94,33 +94,78 @@ fun SettingsScreen(
         item { SettingsSectionLabel("🎨 Appearance") }
         item {
             GameSettingsPanel {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
-                ) {
-                    androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
-                        GameSettingsThemeButton(
-                            title = "Deep Dark",
-                            icon = Icons.Filled.DarkMode,
-                            selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK,
-                            onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK) }
-                        )
+                Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+                    ) {
+                        androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                            GameSettingsThemeButton(
+                                title = "Deep Dark",
+                                icon = Icons.Filled.DarkMode,
+                                selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK,
+                                onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK) }
+                            )
+                        }
+                        androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                            GameSettingsThemeButton(
+                                title = "Mystic Purple",
+                                icon = Icons.Filled.Star,
+                                selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE,
+                                onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE) }
+                            )
+                        }
+                        androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                            GameSettingsThemeButton(
+                                title = "Forest Green",
+                                icon = Icons.Filled.CheckCircle,
+                                selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN,
+                                onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN) }
+                            )
+                        }
                     }
-                    androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
-                        GameSettingsThemeButton(
-                            title = "Purple",
-                            icon = Icons.Filled.Star,
-                            selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE,
-                            onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE) }
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+                    ) {
+                        androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                            GameSettingsThemeButton(
+                                title = "Crimson Night",
+                                icon = Icons.Filled.Star,
+                                selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.CRIMSON_NIGHT,
+                                onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.CRIMSON_NIGHT) }
+                            )
+                        }
+                        androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                            GameSettingsThemeButton(
+                                title = "Ocean Depths",
+                                icon = Icons.Filled.Star,
+                                selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.OCEAN_DEPTHS,
+                                onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.OCEAN_DEPTHS) }
+                            )
+                        }
+                        androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                            GameSettingsThemeButton(
+                                title = "Sunset Blaze",
+                                icon = Icons.Filled.Star,
+                                selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.SUNSET_BLAZE,
+                                onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.SUNSET_BLAZE) }
+                            )
+                        }
                     }
-                    androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
-                        GameSettingsThemeButton(
-                            title = "Green",
-                            icon = Icons.Filled.CheckCircle,
-                            selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN,
-                            onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN) }
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+                    ) {
+                        androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                            GameSettingsThemeButton(
+                                title = "Neon Cyber",
+                                icon = Icons.Filled.Star,
+                                selected = themeType == com.aspharier.questlife.core.ui.theme.ThemeType.NEON_CYBER,
+                                onClick = { viewModel.setThemeType(com.aspharier.questlife.core.ui.theme.ThemeType.NEON_CYBER) }
+                            )
+                        }
+                        Spacer(modifier = Modifier.weight(2f))
                     }
                 }
             }

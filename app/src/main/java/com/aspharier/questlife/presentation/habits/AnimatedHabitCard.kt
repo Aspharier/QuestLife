@@ -76,7 +76,7 @@ fun AnimatedHabitCard(
                         animate = true
                         delay(500)
                         animate = false
-                        delay(100)
+                        delay(1200) // Increased delay to see the animation clearly
                         onAnimationEnd()
                 }
         }

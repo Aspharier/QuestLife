@@ -16,11 +16,19 @@ fun QuestLifeTheme(themeType: ThemeType = ThemeType.DEEP_DARK, content: @Composa
         ThemeType.DEEP_DARK -> DarkColorScheme
         ThemeType.MYSTIC_PURPLE -> PurpleDarkColorScheme
         ThemeType.DARK_GREEN -> GreenDarkColorScheme
+        ThemeType.CRIMSON_NIGHT -> CrimsonNightColorScheme
+        ThemeType.OCEAN_DEPTHS -> OceanDepthsColorScheme
+        ThemeType.SUNSET_BLAZE -> SunsetBlazeColorScheme
+        ThemeType.NEON_CYBER -> NeonCyberColorScheme
     }
     val gameColors = when (themeType) {
         ThemeType.DEEP_DARK -> DarkGameColors
         ThemeType.MYSTIC_PURPLE -> PurpleDarkGameColors
         ThemeType.DARK_GREEN -> GreenDarkGameColors
+        ThemeType.CRIMSON_NIGHT -> CrimsonNightGameColors
+        ThemeType.OCEAN_DEPTHS -> OceanDepthsGameColors
+        ThemeType.SUNSET_BLAZE -> SunsetBlazeGameColors
+        ThemeType.NEON_CYBER -> NeonCyberGameColors
     }
     val view = LocalView.current
 

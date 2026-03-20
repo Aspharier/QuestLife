@@ -26,13 +26,13 @@ private data class Particle(
 @Composable
 fun ConfettiSystem(
         modifier: Modifier = Modifier,
-        particleCount: Int = 25,
+        particleCount: Int = 150,
 ) {
     val particles = remember {
         List(particleCount) {
             Particle(
-                    angle = Random.nextFloat() * 360f,
-                    velocity = Random.nextFloat() * 400f + 200f,
+                    angle = 220f + Random.nextFloat() * 100f,
+                    velocity = Random.nextFloat() * 1500f + 800f,
                     color =
                             listOf(
                                             Color(0xFFFFD700),
@@ -64,11 +64,14 @@ fun ConfettiSystem(
 
             val progress = animationProgress.value
 
-            val x = center.x + cos(radians).toFloat() * particle.velocity * progress
+            val startX = size.width / 2f
+            val startY = size.height
 
+            val x = startX + cos(radians).toFloat() * particle.velocity * progress
+
+            val gravity = 1000f * progress * progress * 1.5f
             val y =
-                    center.y + sin(radians).toFloat() * particle.velocity * progress -
-                            (300 * progress * progress * 1.5f) // gravity
+                    startY + sin(radians).toFloat() * particle.velocity * progress + gravity
 
             val rotationCurrent = particle.rotSpeed * progress * 360f
 
