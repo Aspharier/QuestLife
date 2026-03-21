@@ -126,6 +126,19 @@ constructor(
                                         completedHabitId = event.habit.id,
                                         xpGained = it.xpAwarded
                                 )
+
+                        // Instant UI update
+                        _uiState.update { state ->
+                            state.copy(
+                                habits = state.habits.map { hw ->
+                                    if (hw.habit.id == event.habit.id) {
+                                        hw.copy(isCompletedToday = true)
+                                    } else {
+                                        hw
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,16 +20,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.draw.scale
 import com.aspharier.questlife.core.ui.animations.FadeInEntrance
 import com.aspharier.questlife.core.ui.animations.bounceClickable
 import com.aspharier.questlife.core.ui.components.GameSectionHeader
@@ -110,6 +131,7 @@ fun HabitsScreen(viewModel: HabitsViewModel = hiltViewModel()) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HabitList(
         habits: List<HabitWithStreak>,
@@ -132,23 +154,96 @@ private fun HabitList(
         }
 
         itemsIndexed(items = habits, key = { _, it -> it.habit.id }) { index, habitWithStreak ->
+            val dismissState = rememberSwipeToDismissBoxState(
+                confirmValueChange = {
+                    it != SwipeToDismissBoxValue.StartToEnd
+                }
+            )
+
             FadeInEntrance(index = index) {
-                AnimatedHabitCard(
-                        habitName = habitWithStreak.habit.name,
-                        meta =
-                                "${habitWithStreak.habit.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }} · ${habitWithStreak.habit.category.name.lowercase().replaceFirstChar { it.uppercase() }}",
-                        isCompleted = completionState.completedHabitId == habitWithStreak.habit.id,
-                        isCompletedToday = habitWithStreak.isCompletedToday,
-                        streak = habitWithStreak.currentStreak,
-                        xpGained =
-                                if (completionState.completedHabitId == habitWithStreak.habit.id)
-                                        completionState.xpGained
-                                else null,
-                        onAnimationEnd = onClearCompletion,
-                        onClick = {
-                            if (!habitWithStreak.isCompletedToday) onComplete(habitWithStreak)
-                        },
-                        onLongPress = { onDeactivate(habitWithStreak.habit.id) }
+                val scope = rememberCoroutineScope()
+                SwipeToDismissBox(
+                    state = dismissState,
+                    enableDismissFromStartToEnd = false,
+                    enableDismissFromEndToStart = true,
+                    backgroundContent = {
+                        val color = if (dismissState.targetValue == SwipeToDismissBoxValue.EndToStart) {
+                            MaterialTheme.colorScheme.errorContainer
+                        } else {
+                            Color.Transparent
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 14.dp, vertical = 4.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(color),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            if (dismissState.targetValue == SwipeToDismissBoxValue.EndToStart || dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+                                Row(
+                                    modifier = Modifier.padding(end = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    IconButton(
+                                        onClick = { scope.launch { dismissState.reset() } },
+                                        modifier = Modifier.size(40.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Close,
+                                            contentDescription = "Cancel",
+                                            tint = MaterialTheme.colorScheme.onErrorContainer
+                                        )
+                                    }
+                                    
+                                    val infiniteTransition = rememberInfiniteTransition(label = "deletePulse")
+                                    val scale by infiniteTransition.animateFloat(
+                                        initialValue = 1f,
+                                        targetValue = 1.3f,
+                                        animationSpec = infiniteRepeatable(
+                                            animation = tween(500),
+                                            repeatMode = RepeatMode.Reverse
+                                        ),
+                                        label = "deletePulseScale"
+                                    )
+                                    
+                                    IconButton(
+                                        onClick = { onDeactivate(habitWithStreak.habit.id) },
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .scale(scale)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "Confirm Delete",
+                                            tint = MaterialTheme.colorScheme.onErrorContainer
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    content = {
+                        AnimatedHabitCard(
+                                habitName = habitWithStreak.habit.name,
+                                meta =
+                                        "${habitWithStreak.habit.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }} · ${habitWithStreak.habit.category.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                                isCompleted = completionState.completedHabitId == habitWithStreak.habit.id,
+                                isCompletedToday = habitWithStreak.isCompletedToday,
+                                streak = habitWithStreak.currentStreak,
+                                xpGained =
+                                        if (completionState.completedHabitId == habitWithStreak.habit.id)
+                                                completionState.xpGained
+                                        else null,
+                                onAnimationEnd = onClearCompletion,
+                                onClick = {
+                                    if (!habitWithStreak.isCompletedToday) onComplete(habitWithStreak)
+                                },
+                                onLongPress = {  } // Removed onLongPress since we have swipe
+                        )
+                    }
                 )
             }
         }
