@@ -55,9 +55,13 @@ import com.aspharier.questlife.core.ui.components.GamePanel
 import com.aspharier.questlife.core.ui.components.GameSectionHeader
 import com.aspharier.questlife.presentation.screens.GameScreenBackground
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
-
-@OptIn(ExperimentalMaterial3Api::class)
+import androidx.core.content.ContextCompat
 @Composable
 fun SettingsScreen(
     navController: androidx.navigation.NavController,
@@ -67,6 +71,16 @@ fun SettingsScreen(
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
     val notificationTime by viewModel.notificationTime.collectAsState()
     val context = LocalContext.current
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            viewModel.setNotificationsEnabled(true)
+        } else {
+            Toast.makeText(context, "Notification permission denied", Toast.LENGTH_SHORT).show()
+            viewModel.setNotificationsEnabled(false)
+        }
+    }
 
     GameScreenBackground {
         androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxSize()) {
@@ -88,70 +102,31 @@ fun SettingsScreen(
                 item { SettingsSectionLabel("Appearance") }
                 item {
                     GameSettingsPanel {
-                        Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                            var expanded by remember { androidx.compose.runtime.mutableStateOf(false) }
-
-                            androidx.compose.foundation.layout.Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .clickable { expanded = true }
-                                    .padding(vertical = 12.dp),
-                                contentAlignment = Alignment.Center
+                        Column(
+                            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                        ) {
+                            val themes = com.aspharier.questlife.core.ui.theme.ThemeType.values().toList()
+                            val row1 = themes.take(4)
+                            val row2 = themes.drop(4)
+                            
+                            Row(
+                                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(20.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                val currentThemeName = when(themeType) {
-                                    com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK -> "Deep Dark"
-                                    com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE -> "Mystic Purple"
-                                    com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN -> "Forest Green"
-                                    com.aspharier.questlife.core.ui.theme.ThemeType.CRIMSON_NIGHT -> "Crimson Night"
-                                    com.aspharier.questlife.core.ui.theme.ThemeType.OCEAN_DEPTHS -> "Ocean Depths"
-                                    com.aspharier.questlife.core.ui.theme.ThemeType.SUNSET_BLAZE -> "Sunset Blaze"
-                                    com.aspharier.questlife.core.ui.theme.ThemeType.NEON_CYBER -> "Neon Cyber"
+                                row1.forEach { type ->
+                                    ThemeIcon(type, type == themeType) { viewModel.setThemeType(type) }
                                 }
-
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        text = currentThemeName,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    Icon(
-                                        imageVector = if (expanded) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-
-                                androidx.compose.material3.DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    com.aspharier.questlife.core.ui.theme.ThemeType.values().forEach { type ->
-                                        val typeName = when(type) {
-                                            com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK -> "Deep Dark"
-                                            com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE -> "Mystic Purple"
-                                            com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN -> "Forest Green"
-                                            com.aspharier.questlife.core.ui.theme.ThemeType.CRIMSON_NIGHT -> "Crimson Night"
-                                            com.aspharier.questlife.core.ui.theme.ThemeType.OCEAN_DEPTHS -> "Ocean Depths"
-                                            com.aspharier.questlife.core.ui.theme.ThemeType.SUNSET_BLAZE -> "Sunset Blaze"
-                                            com.aspharier.questlife.core.ui.theme.ThemeType.NEON_CYBER -> "Neon Cyber"
-                                        }
-                                        androidx.compose.material3.DropdownMenuItem(
-                                            text = { 
-                                                Text(
-                                                    text = typeName,
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    textAlign = TextAlign.Center
-                                                ) 
-                                            },
-                                            onClick = {
-                                                viewModel.setThemeType(type)
-                                                expanded = false
-                                            }
-                                        )
-                                    }
+                            }
+                            Row(
+                                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(20.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                row2.forEach { type ->
+                                    ThemeIcon(type, type == themeType) { viewModel.setThemeType(type) }
                                 }
                             }
                         }
@@ -167,7 +142,17 @@ fun SettingsScreen(
                                 title = "Daily Reminders",
                                 subtitle = "Get reminded to complete your habits",
                                 checked = notificationsEnabled,
-                                onCheckedChange = { viewModel.setNotificationsEnabled(it) }
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                                            viewModel.setNotificationsEnabled(true)
+                                        } else {
+                                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                        }
+                                    } else {
+                                        viewModel.setNotificationsEnabled(isChecked)
+                                    }
+                                }
                         )
                         if (notificationsEnabled) {
                             val timeParts = notificationTime.split(":")
@@ -359,47 +344,64 @@ private fun GameSettingsToggle(
 }
 
 @Composable
-private fun GameSettingsThemeButton(
-    title: String,
-    icon: ImageVector,
-    selected: Boolean,
+private fun ThemeIcon(
+    type: com.aspharier.questlife.core.ui.theme.ThemeType,
+    isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val gameColors = com.aspharier.questlife.core.ui.theme.LocalGameColors.current
-    androidx.compose.foundation.layout.Box(
+    val typeName = when(type) {
+        com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK -> "Deep"
+        com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE -> "Mystic"
+        com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN -> "Forest"
+        com.aspharier.questlife.core.ui.theme.ThemeType.CRIMSON_NIGHT -> "Crimson"
+        com.aspharier.questlife.core.ui.theme.ThemeType.OCEAN_DEPTHS -> "Ocean"
+        com.aspharier.questlife.core.ui.theme.ThemeType.SUNSET_BLAZE -> "Sunset"
+        com.aspharier.questlife.core.ui.theme.ThemeType.NEON_CYBER -> "Neon"
+    }
+    val itemColor = when(type) {
+        com.aspharier.questlife.core.ui.theme.ThemeType.DEEP_DARK -> androidx.compose.ui.graphics.Color(0xFF8B5CF6)
+        com.aspharier.questlife.core.ui.theme.ThemeType.MYSTIC_PURPLE -> androidx.compose.ui.graphics.Color(0xFFD946EF)
+        com.aspharier.questlife.core.ui.theme.ThemeType.DARK_GREEN -> androidx.compose.ui.graphics.Color(0xFF10B981)
+        com.aspharier.questlife.core.ui.theme.ThemeType.CRIMSON_NIGHT -> androidx.compose.ui.graphics.Color(0xFFEF4444)
+        com.aspharier.questlife.core.ui.theme.ThemeType.OCEAN_DEPTHS -> androidx.compose.ui.graphics.Color(0xFF06B6D4)
+        com.aspharier.questlife.core.ui.theme.ThemeType.SUNSET_BLAZE -> androidx.compose.ui.graphics.Color(0xFFF97316)
+        com.aspharier.questlife.core.ui.theme.ThemeType.NEON_CYBER -> androidx.compose.ui.graphics.Color(0xFF22D3EE)
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .border(
-                2.dp,
-                if (selected) MaterialTheme.colorScheme.primary else gameColors.panelBorder,
-                RoundedCornerShape(12.dp)
-            )
-            .background(
-                if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
-                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-            )
+            .clip(RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
-            .padding(vertical = 12.dp, horizontal = 8.dp),
-        contentAlignment = Alignment.Center
+            .padding(4.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        androidx.compose.foundation.layout.Box(
+            modifier = Modifier
+                .size(44.dp)
+                .clip(androidx.compose.foundation.shape.CircleShape)
+                .background(itemColor)
+                .border(
+                    width = if (isSelected) 3.dp else 1.dp,
+                    color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                    shape = androidx.compose.foundation.shape.CircleShape
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                icon,
-                contentDescription = null,
-                tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelMedium,
-                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                textAlign = TextAlign.Center
-            )
+            if (isSelected) {
+                Icon(
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = "Selected",
+                    tint = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = typeName,
+            style = MaterialTheme.typography.labelSmall,
+            color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+        )
     }
 }

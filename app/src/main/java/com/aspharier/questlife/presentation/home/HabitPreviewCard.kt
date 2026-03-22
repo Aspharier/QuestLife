@@ -14,12 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.aspharier.questlife.core.ui.theme.QuestCard
+import com.aspharier.questlife.core.ui.theme.LocalGameColors
 
 @Composable
 fun HabitPreviewCard(
     title: String,
     meta: String
 ) {
+    val gameColors = LocalGameColors.current
     QuestCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,7 +52,7 @@ fun HabitPreviewCard(
                     .fillMaxWidth()
                     .height(6.dp)
                     .clip(RoundedCornerShape(50)),
-                color = MaterialTheme.colorScheme.primary
+                color = gameColors.glowPrimary
             )
         }
     }

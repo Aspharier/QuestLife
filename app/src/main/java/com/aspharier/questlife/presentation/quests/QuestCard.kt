@@ -124,8 +124,8 @@ fun QuestCard(quest: Quest) {
                 Spacer(Modifier.height(4.dp))
                 StatBar(
                     progress = progress,
-                    barColor = if (quest.isCompleted) gameColors.completedGreen else MaterialTheme.colorScheme.primary,
-                    barColorEnd = if (quest.isCompleted) gameColors.completedGreen else MaterialTheme.colorScheme.tertiary,
+                    barColor = if (quest.isCompleted) gameColors.completedGreen else gameColors.glowPrimary,
+                    barColorEnd = if (quest.isCompleted) gameColors.completedGreen else gameColors.glowSecondary,
                     height = 8.dp
                 )
             }

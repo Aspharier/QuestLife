@@ -132,7 +132,10 @@ constructor(
                             state.copy(
                                 habits = state.habits.map { hw ->
                                     if (hw.habit.id == event.habit.id) {
-                                        hw.copy(isCompletedToday = true)
+                                        hw.copy(
+                                            isCompletedToday = true,
+                                            currentStreak = it.currentStreak
+                                        )
                                     } else {
                                         hw
                                     }
