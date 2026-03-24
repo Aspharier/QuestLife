@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,8 +16,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -114,17 +119,28 @@ fun HabitsScreen(viewModel: HabitsViewModel = hiltViewModel()) {
         ) { Text("⚔️", fontSize = 24.sp) }
 
         if (showSheet) {
-            ModalBottomSheet(
-                    onDismissRequest = { showSheet = false },
-                    containerColor = MaterialTheme.colorScheme.surface
+            Dialog(
+                onDismissRequest = { showSheet = false },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
             ) {
-                CreateHabitSheet(
-                        onCreate = { event ->
-                            viewModel.onEvent(event)
-                            showSheet = false
-                        },
-                        onDismiss = { showSheet = false }
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .fillMaxHeight(0.85f),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    CreateHabitSheet(
+                            onCreate = { event ->
+                                viewModel.onEvent(event)
+                                showSheet = false
+                            },
+                            onDismiss = { showSheet = false }
+                    )
+                }
             }
         }
         }

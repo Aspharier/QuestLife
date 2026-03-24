@@ -22,6 +22,7 @@ class UserRepositoryImpl @Inject constructor(
     private object PreferencesKeys {
         val USER_TITLE = stringPreferencesKey("user_title")
         val AVATAR_CLASS = stringPreferencesKey("avatar_class")
+        val SELECTED_WARRIOR = stringPreferencesKey("selected_warrior")
     }
 
     override fun observeTotalXp(): Flow<Int> {
@@ -51,7 +52,8 @@ class UserRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 AvatarClass.WARRIOR
             }
-            Persona(title, avatarClass)
+            val selectedWarrior = preferences[PreferencesKeys.SELECTED_WARRIOR] ?: "Novice"
+            Persona(title, avatarClass, selectedWarrior)
         }
     }
 
@@ -59,6 +61,7 @@ class UserRepositoryImpl @Inject constructor(
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.USER_TITLE] = persona.title
             preferences[PreferencesKeys.AVATAR_CLASS] = persona.avatarClass.name
+            preferences[PreferencesKeys.SELECTED_WARRIOR] = persona.selectedWarrior
         }
     }
 }

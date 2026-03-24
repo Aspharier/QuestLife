@@ -28,9 +28,11 @@ import com.aspharier.questlife.core.ui.components.StatBar
 import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import com.aspharier.questlife.presentation.avatar.AvatarRenderer
 import com.aspharier.questlife.presentation.avatar.AvatarState
-import com.aspharier.questlife.presentation.companion.CompanionType
+import com.aspharier.questlife.presentation.home.getActiveWarrior
 import kotlin.math.cos
 import kotlin.math.sin
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 
 private var hasPlayedAvatarAnimation = false
 
@@ -40,7 +42,6 @@ fun AvatarHeroSection(
     totalXp: Int,
     progress: Float,
     persona: com.aspharier.questlife.domain.model.Persona,
-    companionType: CompanionType = CompanionType.WOLF,
     onAvatarClick: () -> Unit
 ) {
     var targetLevel by remember { mutableIntStateOf(if (hasPlayedAvatarAnimation) level else 1) }
@@ -81,7 +82,11 @@ fun AvatarHeroSection(
 
     val gameColors = LocalGameColors.current
     val primaryColor = MaterialTheme.colorScheme.primary
-    val companionColor = Color(companionType.primaryColor)
+    val activeWarrior = remember(persona.selectedWarrior, level) {
+        val selected = warriorTiers.find { it.name == persona.selectedWarrior }
+        if (selected != null && selected.levelRequired <= level) selected
+        else getActiveWarrior(level)
+    }
 
     GamePanel(
         modifier = Modifier
@@ -131,13 +136,7 @@ fun AvatarHeroSection(
                 ), label = "runeRotation"
             )
 
-            val companionPulse by infiniteTransition.animateFloat(
-                initialValue = 0.6f, targetValue = 1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(1200, easing = EaseInOutSine),
-                    repeatMode = RepeatMode.Reverse
-                ), label = "companionPulse"
-            )
+
 
             // --- Avatar with emblem ring and companion badge ---
             Box(
@@ -177,7 +176,7 @@ fun AvatarHeroSection(
                                 colors = listOf(
                                     primaryColor.copy(alpha = ringGlow),
                                     primaryColor.copy(alpha = 0.05f),
-                                    companionColor.copy(alpha = ringGlow * 0.7f),
+                                    activeWarrior.glowColor.copy(alpha = ringGlow * 0.7f),
                                     primaryColor.copy(alpha = 0.05f),
                                     primaryColor.copy(alpha = ringGlow)
                                 )
@@ -217,41 +216,10 @@ fun AvatarHeroSection(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    AvatarRenderer(
-                        state = AvatarState(avatarClass = persona.avatarClass),
+                    Image(
+                        painter = painterResource(id = activeWarrior.drawableRes),
+                        contentDescription = activeWarrior.name,
                         modifier = Modifier.size(72.dp)
-                    )
-                }
-
-                // Companion badge (bottom-right)
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .offset(x = (-8).dp, y = (-4).dp)
-                        .size(40.dp)
-                        .shadow(
-                            8.dp, CircleShape,
-                            spotColor = companionColor.copy(alpha = 0.5f)
-                        )
-                        .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(
-                                    companionColor.copy(alpha = 0.25f),
-                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
-                                )
-                            )
-                        )
-                        .border(
-                            width = 1.5.dp,
-                            color = companionColor.copy(alpha = companionPulse * 0.6f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = companionType.emoji,
-                        fontSize = 20.sp
                     )
                 }
             }
@@ -295,6 +263,42 @@ fun AvatarHeroSection(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 3.sp
                 )
+            }
+
+            Spacer(Modifier.height(6.dp))
+
+            // Warrior name + rarity
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "⚔️",
+                    fontSize = 14.sp
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = activeWarrior.name,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = activeWarrior.glowColor,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.width(6.dp))
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(activeWarrior.glowColor.copy(alpha = 0.15f))
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = activeWarrior.rarityLabel,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = activeWarrior.glowColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 9.sp
+                    )
+                }
             }
 
             Spacer(Modifier.height(6.dp))

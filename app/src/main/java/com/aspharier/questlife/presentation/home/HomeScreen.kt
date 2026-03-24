@@ -32,9 +32,7 @@ import com.aspharier.questlife.core.ui.theme.LocalGameColors
 import com.aspharier.questlife.core.ui.theme.TimeThemeSystem
 import com.aspharier.questlife.navigation.NavRoute
 import com.aspharier.questlife.presentation.achievements.AchievementUnlockAnimation
-import com.aspharier.questlife.presentation.companion.AnimatedCompanion
-import com.aspharier.questlife.presentation.companion.CompanionType
-import com.aspharier.questlife.presentation.companion.getCompanionForClass
+
 
 import com.aspharier.questlife.presentation.profile.LevelUpAnimation
 import com.aspharier.questlife.presentation.profile.ProfileViewModel
@@ -68,9 +66,7 @@ fun HomeScreen(navController: NavController) {
 
         val gameColors = LocalGameColors.current
 
-        val companionType = remember(profileState.persona.avatarClass) {
-                getCompanionForClass(profileState.persona.avatarClass.name)
-        }
+
 
 
 
@@ -107,13 +103,12 @@ fun HomeScreen(navController: NavController) {
                                 Spacer(Modifier.height(8.dp))
 
 
-                                // Companion + Avatar section
+                                // Avatar + Warrior section
                                 AvatarHeroSection(
                                         level = profileState.level,
                                         totalXp = profileState.totalXp,
                                         progress = profileState.progressToNextLevel,
                                         persona = profileState.persona,
-                                        companionType = companionType,
                                         onAvatarClick = { navController.navigate(NavRoute.Roadmap.route) }
                                 )
                         }
@@ -140,8 +135,10 @@ fun HomeScreen(navController: NavController) {
                                 )
                         }
 
+
+
                         item {
-                                Spacer(Modifier.height(20.dp))
+                                Spacer(Modifier.height(12.dp))
                                 if (questsState.dailyQuests.isNotEmpty()) {
                                         GameSectionHeader(title = "Daily Quests", textColor = Color.White)
                                         Spacer(Modifier.height(8.dp))
@@ -158,7 +155,6 @@ fun HomeScreen(navController: NavController) {
                                         }
                                         Spacer(Modifier.height(16.dp))
                                 }
-
                         }
                 }
 
