@@ -1,3 +1,18 @@
+<p align="center">
+  <img width="150" height="150" alt="QuestLife App Icon" src="https://github.com/user-attachments/assets/d15eae6a-0ffd-41ce-8ed4-98f8f407506b" />
+</p>
+
+<h1 align="center">QuestLife</h1>
+
+<p align="center">
+  An RPG-inspired productivity app that turns your daily habits and tasks into a real-life leveling system ⚔️
+</p>
+
+<p align="center">
+  Build your character, complete quests, and level up your life using Kotlin & Jetpack Compose 🚀
+</p>
+
+---
 # How QuestLife Works
 
 **QuestLife** is an **RPG-inspired productivity app** that transforms your daily habits and tasks (called **Quests**) into a **character progression system**.
