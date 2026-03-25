@@ -6,9 +6,21 @@ Every positive action you take in real life helps your **digital avatar grow str
 
 ---
 
+# Screenshots Overview
+
+| Home Screen | Habits Screen | Create Habit Screen |
+|------------|--------------|---------------------|
+| <img src="https://github.com/user-attachments/assets/3bad9e55-3d3e-44ed-8dcd-f6ad2e37736f" width="250"/> | <img src="https://github.com/user-attachments/assets/817f61d6-4e4a-459b-8948-1a1a58d5d886" width="250"/> | <img src="https://github.com/user-attachments/assets/44da7f8b-8e63-4e11-a3b6-5054e46ad3f8" width="250"/> |
+
+| Achievements Screen | Equipment Screen | Settings Screen |
+|--------------------|------------------|----------------|
+| <img src="https://github.com/user-attachments/assets/f55e9e4f-baab-41aa-b82a-e0508e12d9a8" width="250"/> | <img src="https://github.com/user-attachments/assets/86b647f0-743c-42ba-b165-beb935a141cd" width="250"/> | <img src="https://github.com/user-attachments/assets/b5b5d923-89f5-435b-a64c-fdae1ac04c54" width="250"/> |
+
+---
+
 # Core Mechanics
 
-## 1️⃣ Level & XP (Experience Points)
+## Level & XP (Experience Points)
 
 Your **Level** represents your overall progress in the game.
 
@@ -38,7 +50,7 @@ QuestLife follows an **exponential progression curve**, ensuring that the game r
 
 ---
 
-## 2️⃣ Character Stats
+## Character Stats
 
 Your character grows stronger as you improve different areas of your life.
 
@@ -56,7 +68,7 @@ Each habit you complete contributes to improving **specific character attributes
 
 ---
 
-## 🛡️ Equipment System
+## Equipment System
 
 The **Equipment Screen** allows you to customize your avatar and gain **powerful stat bonuses**.
 
