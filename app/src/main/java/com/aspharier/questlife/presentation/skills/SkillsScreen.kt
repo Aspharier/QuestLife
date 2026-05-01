@@ -29,6 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aspharier.questlife.core.ui.components.GamePanel
+import com.aspharier.questlife.core.ui.components.GameSectionHeader
+import com.aspharier.questlife.presentation.screens.GameScreenBackground
 
 private data class Skill(
         val emoji: String,
@@ -53,19 +56,21 @@ private val skills =
 
 @Composable
 fun SkillsScreen() {
+    GameScreenBackground {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-                text = "Skills",
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+        GameSectionHeader(
+                title = "Skills",
+                modifier = Modifier.padding(top = 12.dp)
         )
 
-        Text(
-                text = "Complete habits to unlock and upgrade skills",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp)
-        )
+        GamePanel(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+            Text(
+                    text = "Complete habits to unlock and upgrade skills",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(14.dp)
+            )
+        }
 
         Spacer(Modifier.height(16.dp))
 
@@ -78,22 +83,14 @@ fun SkillsScreen() {
                 flingBehavior = androidx.compose.foundation.gestures.ScrollableDefaults.flingBehavior()
         ) { items(skills) { skill -> SkillNode(skill = skill) } }
     }
+    }
 }
 
 @Composable
 private fun SkillNode(skill: Skill) {
     val alpha = if (skill.unlocked) 1f else 0.4f
 
-    Card(
-            shape = RoundedCornerShape(16.dp),
-            colors =
-                    CardDefaults.cardColors(
-                            containerColor =
-                                    if (skill.unlocked) MaterialTheme.colorScheme.primaryContainer
-                                    else MaterialTheme.colorScheme.surfaceVariant
-                    ),
-            modifier = Modifier.alpha(alpha)
-    ) {
+    GamePanel(modifier = Modifier.alpha(alpha)) {
         Column(
                 modifier = Modifier.fillMaxWidth().padding(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -131,7 +128,7 @@ private fun SkillNode(skill: Skill) {
                         text = "Lv ${skill.level}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary
-                )
+                        )
             }
         }
     }

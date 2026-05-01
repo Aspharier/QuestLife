@@ -1,12 +1,10 @@
 package com.aspharier.questlife.core.ui.theme
 
 import android.app.Activity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
@@ -20,6 +18,9 @@ fun QuestLifeTheme(themeType: ThemeType = ThemeType.DEEP_DARK, content: @Composa
         ThemeType.OCEAN_DEPTHS -> OceanDepthsColorScheme
         ThemeType.SUNSET_BLAZE -> SunsetBlazeColorScheme
         ThemeType.NEON_CYBER -> NeonCyberColorScheme
+        ThemeType.AURORA_GLADE -> AuroraGladeColorScheme
+        ThemeType.PAPER_LANTERN -> PaperLanternColorScheme
+        ThemeType.SKY_CITADEL -> SkyCitadelColorScheme
     }
     val gameColors = when (themeType) {
         ThemeType.DEEP_DARK -> DarkGameColors
@@ -29,6 +30,9 @@ fun QuestLifeTheme(themeType: ThemeType = ThemeType.DEEP_DARK, content: @Composa
         ThemeType.OCEAN_DEPTHS -> OceanDepthsGameColors
         ThemeType.SUNSET_BLAZE -> SunsetBlazeGameColors
         ThemeType.NEON_CYBER -> NeonCyberGameColors
+        ThemeType.AURORA_GLADE -> AuroraGladeGameColors
+        ThemeType.PAPER_LANTERN -> PaperLanternGameColors
+        ThemeType.SKY_CITADEL -> SkyCitadelGameColors
     }
     val view = LocalView.current
 
@@ -39,8 +43,8 @@ fun QuestLifeTheme(themeType: ThemeType = ThemeType.DEEP_DARK, content: @Composa
             window.navigationBarColor = android.graphics.Color.TRANSPARENT
             
             val insetsController = WindowCompat.getInsetsController(window, view)
-            insetsController.isAppearanceLightStatusBars = false
-            insetsController.isAppearanceLightNavigationBars = false
+            insetsController.isAppearanceLightStatusBars = themeType.isLight
+            insetsController.isAppearanceLightNavigationBars = themeType.isLight
         }
     }
 

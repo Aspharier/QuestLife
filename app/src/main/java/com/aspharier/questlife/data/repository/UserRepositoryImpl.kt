@@ -26,9 +26,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun observeTotalXp(): Flow<Int> {
-        return completionDao.observeAllCompletions().map { completions ->
-            completions.sumOf { it.xpAwarded }
-        }
+        return completionDao.observeTotalXp().map { it ?: 0 }
     }
 
     override suspend fun addXp(amount: Int) {

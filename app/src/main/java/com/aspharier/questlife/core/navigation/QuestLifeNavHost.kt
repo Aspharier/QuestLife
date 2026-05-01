@@ -1,7 +1,6 @@
 package com.aspharier.questlife.core.navigation
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.EaseInOutQuart
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -33,32 +32,16 @@ fun QuestLifeNavHost() {
                 startDestination = NavRoute.Home.route,
                 modifier = Modifier.padding(paddingValues),
                 enterTransition = {
-                    fadeIn(animationSpec = tween(400)) +
-                            slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                                    animationSpec = tween(400, easing = EaseInOutQuart)
-                            )
+                    fadeIn(animationSpec = tween(200))
                 },
                 exitTransition = {
-                    fadeOut(animationSpec = tween(400)) +
-                            slideOutOfContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                                    animationSpec = tween(400, easing = EaseInOutQuart)
-                            )
+                    fadeOut(animationSpec = tween(150))
                 },
                 popEnterTransition = {
-                    fadeIn(animationSpec = tween(400)) +
-                            slideIntoContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.End,
-                                    animationSpec = tween(400, easing = EaseInOutQuart)
-                            )
+                    fadeIn(animationSpec = tween(200))
                 },
                 popExitTransition = {
-                    fadeOut(animationSpec = tween(400)) +
-                            slideOutOfContainer(
-                                    towards = AnimatedContentTransitionScope.SlideDirection.End,
-                                    animationSpec = tween(400, easing = EaseInOutQuart)
-                            )
+                    fadeOut(animationSpec = tween(150))
                 }
         ) {
             // routes....

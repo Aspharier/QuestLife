@@ -45,4 +45,16 @@ interface CompletionDao {
         WHERE habitId = :habitId AND completedAt >= :todayStart
     """)
     suspend fun countCompletionsTodayForHabit(habitId: String, todayStart: Long): Int
+
+    @Query("SELECT COUNT(*) FROM completions WHERE completedAt >= :start")
+    suspend fun getCompletionCountSince(start: Long): Int
+
+    @Query("SELECT MAX(currentStreak) FROM completions")
+    suspend fun getMaxStreak(): Int
+
+    @Query("SELECT COUNT(*) FROM completions")
+    suspend fun getTotalCompletionCount(): Int
+
+    @Query("SELECT SUM(xpAwarded) FROM completions")
+    fun observeTotalXp(): Flow<Int?>
 }

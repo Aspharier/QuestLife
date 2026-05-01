@@ -66,4 +66,15 @@ constructor(private val habitDao: HabitDao, private val completionDao: Completio
             entities.map { it.toDomain() }
         }
     }
+
+    override suspend fun getCompletionCountSince(startMs: Long): Int =
+            completionDao.getCompletionCountSince(startMs)
+
+    override suspend fun getMaxStreakAcrossAllHabits(): Int = completionDao.getMaxStreak()
+
+    override suspend fun getTotalCompletionCount(): Int = completionDao.getTotalCompletionCount()
+
+    override suspend fun getTotalHabitsCreated(): Int = habitDao.getCount()
+
+    override suspend fun getActiveHabitsCount(): Int = habitDao.getActiveCount()
 }

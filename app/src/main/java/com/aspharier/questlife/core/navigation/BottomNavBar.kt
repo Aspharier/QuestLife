@@ -1,8 +1,7 @@
 package com.aspharier.questlife.core.navigation
 
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -33,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -58,27 +56,12 @@ fun BottomNavBar(navController: NavController, currentRoute: String?) {
     val gameColors = LocalGameColors.current
 
     Column {
-        // Top border glow line
+        // Subtle top hairline
         Box(
                 modifier =
                         Modifier.fillMaxWidth()
-                                .height(1.dp)
-                                .background(
-                                        Brush.horizontalGradient(
-                                                colors =
-                                                        listOf(
-                                                                gameColors.navBarBorder.copy(
-                                                                        alpha = 0.1f
-                                                                ),
-                                                                gameColors.navBarSelected.copy(
-                                                                        alpha = 0.4f
-                                                                ),
-                                                                gameColors.navBarBorder.copy(
-                                                                        alpha = 0.1f
-                                                                )
-                                                        )
-                                        )
-                                )
+                                .height(0.5.dp)
+                                .background(gameColors.navBarBorder.copy(alpha = 0.25f))
         )
 
         Row(
@@ -86,7 +69,7 @@ fun BottomNavBar(navController: NavController, currentRoute: String?) {
                         Modifier.fillMaxWidth()
                                 .background(gameColors.navBarBackground)
                                 .navigationBarsPadding()
-                                .padding(vertical = 6.dp, horizontal = 4.dp),
+                                .padding(vertical = 4.dp, horizontal = 4.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
         ) {
@@ -114,12 +97,8 @@ private fun GameNavItem(item: NavItem, selected: Boolean, onClick: () -> Unit) {
 
     val scale by
             animateFloatAsState(
-                    targetValue = if (selected) 1.08f else 1f,
-                    animationSpec =
-                            spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = Spring.StiffnessMediumLow
-                            ),
+                    targetValue = if (selected) 1.04f else 1f,
+                    animationSpec = tween(200),
                     label = "navScale"
             )
 

@@ -25,4 +25,10 @@ interface HabitDao {
 
     @Query("SELECT * FROM habits WHERE id = :habitId LIMIT 1")
     suspend fun getHabitById(habitId: String): HabitEntity?
+
+    @Query("SELECT COUNT(*) FROM habits")
+    suspend fun getCount(): Int
+
+    @Query("SELECT COUNT(*) FROM habits WHERE isActive = 1")
+    suspend fun getActiveCount(): Int
 }

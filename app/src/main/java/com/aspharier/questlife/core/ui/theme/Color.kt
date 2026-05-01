@@ -423,4 +423,213 @@ val NeonCyberGameColors = GameColors(
         glowPrimary = Color(0xFF2DD4BF), glowSecondary = Color(0xFFF472B6),
 )
 
+// ── Light Theme Palettes ──────────────────────────────────────────────────────
+
+val AuroraGladeColorScheme =
+        lightColorScheme(
+                primary = Color(0xFF0F766E),
+                onPrimary = Color(0xFFFFFFFF),
+                primaryContainer = Color(0xFFA7F3D0),
+                onPrimaryContainer = Color(0xFF042F2E),
+                secondary = Color(0xFFBE123C),
+                onSecondary = Color(0xFFFFFFFF),
+                secondaryContainer = Color(0xFFFFDCE5),
+                onSecondaryContainer = Color(0xFF4C0519),
+                tertiary = Color(0xFFB45309),
+                onTertiary = Color(0xFFFFFFFF),
+                tertiaryContainer = Color(0xFFFDE68A),
+                onTertiaryContainer = Color(0xFF451A03),
+                background = Color(0xFFF7FBF7),
+                onBackground = Color(0xFF17211D),
+                surface = Color(0xFFFFFFFF),
+                onSurface = Color(0xFF17211D),
+                surfaceVariant = Color(0xFFE0EEE8),
+                onSurfaceVariant = Color(0xFF4B6359),
+                outline = Color(0xFF86A195),
+                error = Color(0xFFBA1A1A),
+                onError = Color(0xFFFFFFFF),
+                errorContainer = Color(0xFFFFDAD6),
+                onErrorContainer = Color(0xFF410002),
+        )
+
+val PaperLanternColorScheme =
+        lightColorScheme(
+                primary = Color(0xFFC2410C),
+                onPrimary = Color(0xFFFFFFFF),
+                primaryContainer = Color(0xFFFFDBCC),
+                onPrimaryContainer = Color(0xFF431407),
+                secondary = Color(0xFF4338CA),
+                onSecondary = Color(0xFFFFFFFF),
+                secondaryContainer = Color(0xFFE0E7FF),
+                onSecondaryContainer = Color(0xFF1E1B4B),
+                tertiary = Color(0xFF047857),
+                onTertiary = Color(0xFFFFFFFF),
+                tertiaryContainer = Color(0xFFA7F3D0),
+                onTertiaryContainer = Color(0xFF022C22),
+                background = Color(0xFFFFF8EA),
+                onBackground = Color(0xFF292016),
+                surface = Color(0xFFFFFCF4),
+                onSurface = Color(0xFF292016),
+                surfaceVariant = Color(0xFFF0DFC4),
+                onSurfaceVariant = Color(0xFF635744),
+                outline = Color(0xFF9E8A6B),
+                error = Color(0xFFBA1A1A),
+                onError = Color(0xFFFFFFFF),
+                errorContainer = Color(0xFFFFDAD6),
+                onErrorContainer = Color(0xFF410002),
+        )
+
+val SkyCitadelColorScheme =
+        lightColorScheme(
+                primary = Color(0xFF0369A1),
+                onPrimary = Color(0xFFFFFFFF),
+                primaryContainer = Color(0xFFBAE6FD),
+                onPrimaryContainer = Color(0xFF082F49),
+                secondary = Color(0xFFA16207),
+                onSecondary = Color(0xFFFFFFFF),
+                secondaryContainer = Color(0xFFFEF3C7),
+                onSecondaryContainer = Color(0xFF422006),
+                tertiary = Color(0xFF6D28D9),
+                onTertiary = Color(0xFFFFFFFF),
+                tertiaryContainer = Color(0xFFEDE9FE),
+                onTertiaryContainer = Color(0xFF2E1065),
+                background = Color(0xFFF3F8FF),
+                onBackground = Color(0xFF142033),
+                surface = Color(0xFFFFFFFF),
+                onSurface = Color(0xFF142033),
+                surfaceVariant = Color(0xFFDDEAF7),
+                onSurfaceVariant = Color(0xFF4A5E72),
+                outline = Color(0xFF8398AD),
+                error = Color(0xFFBA1A1A),
+                onError = Color(0xFFFFFFFF),
+                errorContainer = Color(0xFFFFDAD6),
+                onErrorContainer = Color(0xFF410002),
+        )
+
+val AuroraGladeGameColors =
+        GameColors(
+                panelBackground = Color(0xFFFFFFFF),
+                panelBorder = Color(0xFFB9D9CF),
+                panelBorderGlow = Color(0x330F766E),
+                healthBar = Color(0xFFE11D48),
+                manaBar = Color(0xFF0EA5E9),
+                xpBar = Color(0xFFEAB308),
+                xpBarSecondary = Color(0xFFF97316),
+                staminaBar = Color(0xFF10B981),
+                streakFlame = Color(0xFFF97316),
+                rarityCommon = Color(0xFF64748B),
+                rarityRare = Color(0xFF0284C7),
+                rarityEpic = Color(0xFF7C3AED),
+                rarityLegendary = Color(0xFFD97706),
+                accentGlow = Color(0x220F766E),
+                fabGlow = Color(0xFF0F766E),
+                navBarBackground = Color(0xFFF9FFFB),
+                navBarBorder = Color(0xFFCFE7DE),
+                navBarSelected = Color(0xFF0F766E),
+                navBarUnselected = Color(0xFF6B8178),
+                sectionDivider = Color(0x330F766E),
+                chipSelected = Color(0x220F766E),
+                chipBorder = Color(0xFFB9D9CF),
+                completedGreen = Color(0xFF059669),
+                screenBackgroundGradient =
+                        listOf(
+                                Color(0xFFF7FBF7),
+                                Color(0xFFEFFBF3),
+                                Color(0xFFFFF7D6).copy(alpha = 0.65f),
+                                Color(0xFFFFDCE5).copy(alpha = 0.45f)
+                        ),
+                particleColors =
+                        listOf(
+                                Color(0xFF0F766E),
+                                Color(0xFFBE123C),
+                                Color(0xFFB45309).copy(alpha = 0.65f)
+                        ),
+                glowPrimary = Color(0xFF0F766E),
+                glowSecondary = Color(0xFFBE123C),
+        )
+
+val PaperLanternGameColors =
+        GameColors(
+                panelBackground = Color(0xFFFFFCF4),
+                panelBorder = Color(0xFFE5CFA8),
+                panelBorderGlow = Color(0x33C2410C),
+                healthBar = Color(0xFFDC2626),
+                manaBar = Color(0xFF4338CA),
+                xpBar = Color(0xFFD97706),
+                xpBarSecondary = Color(0xFFF59E0B),
+                staminaBar = Color(0xFF047857),
+                streakFlame = Color(0xFFEA580C),
+                rarityCommon = Color(0xFF78716C),
+                rarityRare = Color(0xFF2563EB),
+                rarityEpic = Color(0xFF9333EA),
+                rarityLegendary = Color(0xFFC2410C),
+                accentGlow = Color(0x22C2410C),
+                fabGlow = Color(0xFFC2410C),
+                navBarBackground = Color(0xFFFFF8EA),
+                navBarBorder = Color(0xFFEAD7B8),
+                navBarSelected = Color(0xFFC2410C),
+                navBarUnselected = Color(0xFF7C6A52),
+                sectionDivider = Color(0x33C2410C),
+                chipSelected = Color(0x22C2410C),
+                chipBorder = Color(0xFFE5CFA8),
+                completedGreen = Color(0xFF047857),
+                screenBackgroundGradient =
+                        listOf(
+                                Color(0xFFFFF8EA),
+                                Color(0xFFFFFCF4),
+                                Color(0xFFFFE6D5).copy(alpha = 0.6f),
+                                Color(0xFFE0E7FF).copy(alpha = 0.45f)
+                        ),
+                particleColors =
+                        listOf(
+                                Color(0xFFC2410C),
+                                Color(0xFF4338CA),
+                                Color(0xFF047857).copy(alpha = 0.65f)
+                        ),
+                glowPrimary = Color(0xFFC2410C),
+                glowSecondary = Color(0xFF4338CA),
+        )
+
+val SkyCitadelGameColors =
+        GameColors(
+                panelBackground = Color(0xFFFFFFFF),
+                panelBorder = Color(0xFFC7D9EC),
+                panelBorderGlow = Color(0x330369A1),
+                healthBar = Color(0xFFE11D48),
+                manaBar = Color(0xFF0284C7),
+                xpBar = Color(0xFFEAB308),
+                xpBarSecondary = Color(0xFFD97706),
+                staminaBar = Color(0xFF14B8A6),
+                streakFlame = Color(0xFFF59E0B),
+                rarityCommon = Color(0xFF64748B),
+                rarityRare = Color(0xFF0369A1),
+                rarityEpic = Color(0xFF6D28D9),
+                rarityLegendary = Color(0xFFA16207),
+                accentGlow = Color(0x220369A1),
+                fabGlow = Color(0xFF0369A1),
+                navBarBackground = Color(0xFFF8FBFF),
+                navBarBorder = Color(0xFFD1E1F2),
+                navBarSelected = Color(0xFF0369A1),
+                navBarUnselected = Color(0xFF65798C),
+                sectionDivider = Color(0x330369A1),
+                chipSelected = Color(0x220369A1),
+                chipBorder = Color(0xFFC7D9EC),
+                completedGreen = Color(0xFF0D9488),
+                screenBackgroundGradient =
+                        listOf(
+                                Color(0xFFF3F8FF),
+                                Color(0xFFEAF6FF),
+                                Color(0xFFFEF3C7).copy(alpha = 0.55f),
+                                Color(0xFFEDE9FE).copy(alpha = 0.42f)
+                        ),
+                particleColors =
+                        listOf(
+                                Color(0xFF0369A1),
+                                Color(0xFFA16207),
+                                Color(0xFF6D28D9).copy(alpha = 0.62f)
+                        ),
+                glowPrimary = Color(0xFF0369A1),
+                glowSecondary = Color(0xFFA16207),
+        )
+
 val LocalGameColors = staticCompositionLocalOf { DarkGameColors }

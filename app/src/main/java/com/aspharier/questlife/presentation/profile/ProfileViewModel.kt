@@ -10,10 +10,12 @@ import com.aspharier.questlife.domain.usecase.CalculateTotalStatsUseCase
 import com.aspharier.questlife.domain.usecase.ProgressionSystem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -30,7 +32,7 @@ constructor(
     private val calculateTotalStatsUseCase = CalculateTotalStatsUseCase()
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    private var previousLevel = 1
+    private var previousLevel = -1
 
     init {
         observeXp()
@@ -48,11 +50,14 @@ constructor(
                 val progress = ProgressionSystem.currentLevelProgress(totalXp)
                 val baseStats = calculateStatsUseCase(level, habits)
                 val finalStats = calculateTotalStatsUseCase(baseStats, equipped)
-                val levelUp = level > previousLevel
-                previousLevel = level
-
-                // Unlock any items the player is now eligible for
-                equipmentRepository.unlockIfEligible(level)
+                
+                val levelUp = previousLevel != -1 && level > previousLevel
+                
+                // Only trigger DB update if level actually increased
+                if (level > previousLevel) {
+                    previousLevel = level
+                    equipmentRepository.unlockIfEligible(level)
+                }
 
                 ProfileUiState(
                         level = level,
@@ -63,7 +68,8 @@ constructor(
                         persona = persona
                 )
             }
-                    .collect { state -> _uiState.value = state }
+            .flowOn(Dispatchers.Default) // Ensure transformation runs off-main thread
+            .collect { state -> _uiState.value = state }
         }
     }
 

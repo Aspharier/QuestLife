@@ -40,6 +40,7 @@ import com.aspharier.questlife.presentation.quests.QuestCard
 import com.aspharier.questlife.presentation.quests.QuestsViewModel
 import com.aspharier.questlife.domain.model.Quest
 import com.aspharier.questlife.presentation.rewards.ComboIndicator
+import com.aspharier.questlife.presentation.screens.GameScreenBackground
 import com.aspharier.questlife.presentation.settings.SettingsViewModel
 
 import com.aspharier.questlife.domain.model.Achievement
@@ -64,34 +65,8 @@ fun HomeScreen(navController: NavController) {
         var comboTimeRemaining by remember { mutableLongStateOf(0L) }
         var achievementsToShow by remember { mutableStateOf<List<Achievement>>(emptyList()) }
 
-        val gameColors = LocalGameColors.current
-
-
-
-
-
+        GameScreenBackground {
         Box(modifier = Modifier.fillMaxSize()) {
-                // Theme background gradient
-                Box(
-                        modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                        Brush.verticalGradient(
-                                                colors = gameColors.screenBackgroundGradient
-                                        )
-                                )
-                )
-
-                // Ambient particles
-                GlowingBackground(
-                        primaryColor = gameColors.glowPrimary,
-                        secondaryColor = gameColors.glowSecondary
-                )
-                AmbientParticles(
-                        colors = gameColors.particleColors,
-                        particleCount = 25
-                )
-
                 val lazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
                 LazyColumn(
                         state = lazyListState,
@@ -140,7 +115,7 @@ fun HomeScreen(navController: NavController) {
                         item {
                                 Spacer(Modifier.height(12.dp))
                                 if (questsState.dailyQuests.isNotEmpty()) {
-                                        GameSectionHeader(title = "Daily Quests", textColor = Color.White)
+                                        GameSectionHeader(title = "Daily Quests")
                                         Spacer(Modifier.height(8.dp))
                                         questsState.dailyQuests.forEachIndexed { index, quest ->
                                                 FadeInEntrance(index = index) {
@@ -178,70 +153,6 @@ fun HomeScreen(navController: NavController) {
                         )
                 }
         }
-}
-
-@Composable
-fun GameActionButton(
-        icon: String,
-        label: String,
-        gradientColors: List<Color>,
-        onClick: () -> Unit,
-        modifier: Modifier = Modifier
-) {
-        Card(
-                modifier = modifier
-                        .bounceClickable { onClick() },
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                        containerColor = Color.Transparent
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-                Box(
-                        modifier = Modifier
-                                .background(
-                                        Brush.horizontalGradient(colors = gradientColors),
-                                        RoundedCornerShape(16.dp)
-                                )
-                                .padding(vertical = 14.dp),
-                        contentAlignment = Alignment.Center
-                ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(icon, fontSize = 20.sp)
-                                Spacer(modifier = Modifier.height(2.dp))
-                                Text(
-                                        label,
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = Color.White,
-                                        fontWeight = FontWeight.SemiBold
-                                )
-                        }
-                }
-        }
-}
-
-@Composable
-fun SmallActionFab(
-        icon: String,
-        gradientColors: List<Color>,
-        onClick: () -> Unit
-) {
-        Box(
-                modifier = Modifier
-                        .bounceClickable { onClick() }
-                        .shadow(
-                                elevation = 8.dp,
-                                shape = CircleShape,
-                                spotColor = gradientColors.first().copy(alpha = 0.5f)
-                        )
-                        .size(48.dp)
-                        .background(
-                                Brush.radialGradient(colors = gradientColors),
-                                CircleShape
-                        ),
-                contentAlignment = Alignment.Center
-        ) {
-                Text(icon, fontSize = 20.sp)
         }
 }
 

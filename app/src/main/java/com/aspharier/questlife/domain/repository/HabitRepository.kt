@@ -29,4 +29,10 @@ interface HabitRepository {
 
     /** Observe all completions (for quests / stats) */
     fun observeAllCompletions(): Flow<List<Completion>>
+
+    suspend fun getCompletionCountSince(startMs: Long): Int
+    suspend fun getMaxStreakAcrossAllHabits(): Int
+    suspend fun getTotalCompletionCount(): Int
+    suspend fun getTotalHabitsCreated(): Int
+    suspend fun getActiveHabitsCount(): Int
 }

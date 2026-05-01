@@ -28,7 +28,7 @@ fun StatsRow(hp: Int, atk: Int, def: Int, mana: Int, luck: Int) {
 
     GamePanel(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             StatBarItem(

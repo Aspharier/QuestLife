@@ -110,61 +110,12 @@ fun AvatarHeroSection(
                 .padding(horizontal = 16.dp, vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // --- Animated values ---
-            val infiniteTransition = rememberInfiniteTransition(label = "heroAnim")
-
-            val floatOffset by infiniteTransition.animateFloat(
-                initialValue = -4f, targetValue = 4f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(2000, easing = EaseInOutSine),
-                    repeatMode = RepeatMode.Reverse
-                ), label = "float"
-            )
-
-            val ringGlow by infiniteTransition.animateFloat(
-                initialValue = 0.3f, targetValue = 0.7f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(1500, easing = EaseInOutSine),
-                    repeatMode = RepeatMode.Reverse
-                ), label = "ringGlow"
-            )
-
-            val runeRotation by infiniteTransition.animateFloat(
-                initialValue = 0f, targetValue = 360f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(12000, easing = LinearEasing)
-                ), label = "runeRotation"
-            )
-
-
-
             // --- Avatar with emblem ring and companion badge ---
             Box(
                 modifier = Modifier
-                    .size(150.dp)
-                    .graphicsLayer { translationY = floatOffset.dp.toPx() },
+                    .size(150.dp),
                 contentAlignment = Alignment.Center
             ) {
-                // Orbiting rune dots (class emblem ring)
-                Canvas(modifier = Modifier.size(148.dp)) {
-                    val center = Offset(size.width / 2f, size.height / 2f)
-                    val radius = size.width / 2f - 4.dp.toPx()
-                    val dotCount = 8
-                    for (i in 0 until dotCount) {
-                        val angle = Math.toRadians(
-                            (runeRotation + (360.0 / dotCount) * i)
-                        )
-                        val dotX = center.x + radius * cos(angle).toFloat()
-                        val dotY = center.y + radius * sin(angle).toFloat()
-                        val dotAlpha = 0.3f + (ringGlow * 0.5f)
-                        drawCircle(
-                            color = primaryColor.copy(alpha = dotAlpha),
-                            radius = 3.dp.toPx(),
-                            center = Offset(dotX, dotY)
-                        )
-                    }
-                }
-
                 // Outer glow ring
                 Box(
                     modifier = Modifier
@@ -174,11 +125,11 @@ fun AvatarHeroSection(
                             width = 2.5.dp,
                             brush = Brush.sweepGradient(
                                 colors = listOf(
-                                    primaryColor.copy(alpha = ringGlow),
+                                    primaryColor.copy(alpha = 0.52f),
                                     primaryColor.copy(alpha = 0.05f),
-                                    activeWarrior.glowColor.copy(alpha = ringGlow * 0.7f),
+                                    activeWarrior.glowColor.copy(alpha = 0.36f),
                                     primaryColor.copy(alpha = 0.05f),
-                                    primaryColor.copy(alpha = ringGlow)
+                                    primaryColor.copy(alpha = 0.52f)
                                 )
                             ),
                             shape = CircleShape

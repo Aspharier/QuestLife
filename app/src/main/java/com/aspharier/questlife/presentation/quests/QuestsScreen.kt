@@ -112,70 +112,43 @@ fun QuestsScreen(viewModel: QuestsViewModel = hiltViewModel()) {
                                 contentAlignment = Alignment.Center
                         ) { CircularProgressIndicator(color = MaterialTheme.colorScheme.primary) }
                 } else {
-                        AnimatedContent(
-                                targetState = selectedTab,
-                                transitionSpec = {
-                                        if (targetState > initialState) {
-                                                        (slideInHorizontally { width -> width } +
-                                                                        fadeIn())
-                                                                .togetherWith(
-                                                                        slideOutHorizontally { width
-                                                                                ->
-                                                                                -width
-                                                                        } + fadeOut()
-                                                                )
-                                                } else {
-                                                        (slideInHorizontally { width -> -width } +
-                                                                        fadeIn())
-                                                                .togetherWith(
-                                                                        slideOutHorizontally { width
-                                                                                ->
-                                                                                width
-                                                                        } + fadeOut()
-                                                                )
-                                                }
-                                                .using(SizeTransform(clip = false))
-                                },
-                                label = "tabContent"
-                        ) { targetTab ->
-                                val quests =
-                                        when (targetTab) {
-                                                0 -> uiState.dailyQuests
-                                                1 -> uiState.weeklyQuests
-                                                else -> uiState.achievements
-                                        }
+                        val quests =
+                                when (selectedTab) {
+                                        0 -> uiState.dailyQuests
+                                        1 -> uiState.weeklyQuests
+                                        else -> uiState.achievements
+                                }
 
-                                if (quests.isEmpty()) {
-                                        Box(
-                                                modifier = Modifier.fillMaxSize(),
-                                                contentAlignment = Alignment.Center
-                                        ) {
-                                                Text(
-                                                        text = "No quests available here yet.",
-                                                        style = MaterialTheme.typography.bodyLarge,
-                                                        color =
-                                                                MaterialTheme.colorScheme
-                                                                        .onSurfaceVariant
-                                                )
-                                        }
-                                } else {
-                                        LazyColumn(
-                                                contentPadding =
-                                                        PaddingValues(
-                                                                vertical = 8.dp,
-                                                                horizontal = 16.dp
-                                                        ),
-                                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                                modifier = Modifier.fillMaxSize(),
-                                                flingBehavior = androidx.compose.foundation.gestures.ScrollableDefaults.flingBehavior()
-                                        ) {
-                                                itemsIndexed(
-                                                        quests,
-                                                        key = { _, quest -> quest.id }
-                                                ) { index, quest ->
-                                                        FadeInEntrance(index = index) {
-                                                                QuestCard(quest = quest)
-                                                        }
+                        if (quests.isEmpty()) {
+                                Box(
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentAlignment = Alignment.Center
+                                ) {
+                                        Text(
+                                                text = "No quests available here yet.",
+                                                style = MaterialTheme.typography.bodyLarge,
+                                                color =
+                                                        MaterialTheme.colorScheme
+                                                                .onSurfaceVariant
+                                        )
+                                }
+                        } else {
+                                LazyColumn(
+                                        contentPadding =
+                                                PaddingValues(
+                                                        vertical = 8.dp,
+                                                        horizontal = 16.dp
+                                                ),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                                        modifier = Modifier.fillMaxSize(),
+                                        flingBehavior = androidx.compose.foundation.gestures.ScrollableDefaults.flingBehavior()
+                                ) {
+                                        itemsIndexed(
+                                                quests,
+                                                key = { _, quest -> quest.id }
+                                        ) { index, quest ->
+                                                FadeInEntrance(index = index) {
+                                                        QuestCard(quest = quest)
                                                 }
                                         }
                                 }

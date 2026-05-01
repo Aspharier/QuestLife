@@ -97,26 +97,13 @@ fun HabitsScreen(viewModel: HabitsViewModel = hiltViewModel()) {
                         Modifier.align(Alignment.BottomEnd)
                                 .padding(20.dp)
                                 .bounceClickable { showSheet = true }
-                                .shadow(
-                                        elevation = 12.dp,
-                                        shape = CircleShape,
-                                        spotColor = gameColors.fabGlow.copy(alpha = 0.5f)
-                                )
                                 .size(56.dp)
                                 .background(
-                                        Brush.radialGradient(
-                                                colors =
-                                                        listOf(
-                                                                gameColors.fabGlow,
-                                                                gameColors.fabGlow.copy(
-                                                                        alpha = 0.8f
-                                                                )
-                                                        )
-                                        ),
+                                        gameColors.fabGlow,
                                         CircleShape
                                 ),
                 contentAlignment = Alignment.Center
-        ) { Text("⚔️", fontSize = 24.sp) }
+        ) { Text("+", fontSize = 28.sp, color = MaterialTheme.colorScheme.onPrimary) }
 
         if (showSheet) {
             Dialog(
@@ -214,22 +201,9 @@ private fun HabitList(
                                         )
                                     }
                                     
-                                    val infiniteTransition = rememberInfiniteTransition(label = "deletePulse")
-                                    val scale by infiniteTransition.animateFloat(
-                                        initialValue = 1f,
-                                        targetValue = 1.3f,
-                                        animationSpec = infiniteRepeatable(
-                                            animation = tween(500),
-                                            repeatMode = RepeatMode.Reverse
-                                        ),
-                                        label = "deletePulseScale"
-                                    )
-                                    
                                     IconButton(
                                         onClick = { onDeactivate(habitWithStreak.habit.id) },
-                                        modifier = Modifier
-                                            .size(40.dp)
-                                            .scale(scale)
+                                        modifier = Modifier.size(40.dp)
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Delete,
@@ -277,7 +251,7 @@ private fun LoadingState() {
 private fun EmptyState() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-                text = "No habits for today.\nTap ⚔️ to create your first quest!",
+                text = "No habits for today.\nTap + to create your first quest.",
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
